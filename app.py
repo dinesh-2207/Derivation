@@ -240,8 +240,4 @@ def admin_upload_image():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    app.run(host="0.0.0.0", port=5000, debug=True)
-=======
    app.run(host="0.0.0.0", port=5000, debug=True)
->>>>>>> 408e4dba1554b6d86f95e1f422cfddb6211ae591
