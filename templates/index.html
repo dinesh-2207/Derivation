@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padmasini Lab | Advanced Derivations</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .step-text,
+        .topic-header p,
+        .math-row,
+        .math-result {
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 19px;
+            line-height: 1.6
+        }
+
+        #statement,
+        #theoremStatement,
+        #neetTips,
+        #givenData,
+        #assumptions {
+            white-space: pre-wrap;
+            margin-bottom: 15px;
+            color: #000
+        }
+
+        .step-text {
+            font-style: italic;
+            color: #1a1a1a;
+            margin-bottom: 10px
+        }
+
+        .math-row {
+            color: #0a5a0a;
+            font-weight: bold;
+            margin-bottom: 5px
+        }
+
+        .math-result {
+            font-weight: 800;
+            border-radius: 8px;
+            color: #fff;
+            background: #0a5a0a;
+            padding: 15px;
+            margin-top: 10px
+        }
+
+        /* ═══ SIDEBAR — Professional Light Theme ═══ */
+        .lesson-container {
+            margin-bottom: 8px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2ede2;
+            box-shadow: 0 2px 8px rgba(10, 90, 10, 0.06);
+            transition: box-shadow .25s
+        }
+
+        .lesson-container:hover {
+            box-shadow: 0 4px 14px rgba(10, 90, 10, 0.12)
+        }
+
+        .lesson-title {
+            padding: 11px 14px;
+            background: linear-gradient(135deg, #0a5a0a 0%, #147a14 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+            transition: background .25s;
+            position: relative;
+            user-select: none
+        }
+
+        .lesson-title .lt-arrow {
+            margin-left: auto;
+            font-size: 10px;
+            opacity: .7;
+            transition: transform .3s
+        }
+
+        .lesson-container.active .lesson-title .lt-arrow {
+            transform: rotate(180deg)
+        }
+
+        .lesson-title:hover {
+            background: linear-gradient(135deg, #0d6e0d 0%, #1a8a1a 100%)
+        }
+
+        .topic-list-nested {
+            list-style: none;
+            padding: 6px 6px;
+            margin: 0;
+            max-height: 0;
+            overflow: hidden;
+            background: #fff;
+            transition: max-height .35s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .lesson-container.active .topic-list-nested {
+            max-height: 600px
+        }
+
+        .topic-list-nested li {
+            padding: 9px 10px 9px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 8px;
+            color: #2a4a2a;
+            border-left: 3px solid transparent;
+            margin-bottom: 2px
+        }
+
+        .topic-list-nested li i {
+            font-size: 11px;
+            color: #6aaa6a;
+            flex-shrink: 0
+        }
+
+        .topic-list-nested li:hover {
+            background: #f0faf0;
+            border-left-color: #4caf4c;
+            color: #0a5a0a;
+            padding-left: 16px
+        }
+
+        .topic-list-nested li.active {
+            background: linear-gradient(90deg, #e8f5e8, #f5fbf5);
+            border-left: 3px solid #0a5a0a;
+            color: #0a5a0a;
+            font-weight: 700;
+            padding-left: 16px
+        }
+
+        .topic-list-nested li.active i {
+            color: #0a5a0a
+        }
+
+        /* Sidebar search redesign */
+        .sidebar .search-container input {
+            background: #fff;
+            color: #1a3a1a;
+            border: 1.5px solid #d0e8d0;
+            box-shadow: 0 2px 8px rgba(10, 90, 10, 0.06)
+        }
+
+        .sidebar .search-container input:focus {
+            border-color: #0a5a0a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(10, 90, 10, 0.12)
+        }
+
+        .sidebar .search-container input::placeholder {
+            color: #7a9a7a
+        }
+
+        .sidebar .search-container i {
+            color: #0a5a0a
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #f0f8f0
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(#a8d5a8, #6aaa6a);
+            border-radius: 10px
+        }
+
+        .observation-table-container {
+            margin-top: 25px;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .05);
+            border: 1px solid #e0e0e0
+        }
+
+        .user-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            text-align: left
+        }
+
+        .user-data-table th,
+        .user-data-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            font-size: 15px
+        }
+
+        .user-data-table tr:first-child {
+            background: #0a5a0a;
+            color: #fff;
+            font-weight: bold
+        }
+
+        .user-data-table tr:nth-child(even) {
+            background: #f9fff9
+        }
+
+        .table-caption {
+            font-weight: 800;
+            color: #0a5a0a;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase
+        }
+
+        .content-section {
+            margin-bottom: 20px
+        }
+
+        .section-tag {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px
+        }
+
+        /* ═══ LIVE DIAGRAM ENGINE ═══ */
+        #live-diagram-section {
+            margin: 28px 0;
+            border: 1.5px solid #c2efc2;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(10, 90, 10, .08);
+            display: none;
+            background: #fff
+        }
+
+        .diag-hdr {
+            background: #0a5a0a;
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .dtype-badge {
+            background: rgba(255, 255, 255, .2);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700
+        }
+
+        .diag-body {
+            display: grid;
+            grid-template-columns: 1fr 265px
+        }
+
+        @media(max-width:900px) {
+            .diag-body {
+                grid-template-columns: 1fr
+            }
+
+            #diagram-canvas-wrap {
+                border-right: none;
+                border-bottom: 1px solid #e8f5e8;
+                min-height: 240px
+            }
+
+            .diag-ctrl {
+                padding: 14px 12px
+            }
+        }
+
+        @media(max-width:600px) {
+            .diag-hdr {
+                font-size: 11px;
+                padding: 10px 14px
+            }
+
+            .diag-body {
+                grid-template-columns: 1fr
+            }
+
+            #diagramCanvas {
+                width: 100%;
+                height: auto
+            }
+
+            #diagram-canvas-wrap {
+                padding: 12px;
+                min-height: 200px
+            }
+
+            .diag-result {
+                padding: 10px 14px;
+                font-size: 14px
+            }
+
+            .res-chip {
+                font-size: 12px;
+                padding: 4px 10px
+            }
+
+            #diag-steps {
+                padding: 12px 14px
+            }
+        }
+
+        #diagram-canvas-wrap {
+            padding: 20px;
+            background: #f9fff9;
+            border-right: 1px solid #e8f5e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px
+        }
+
+        #diagramCanvas {
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+            max-width: 100%;
+            height: auto
+        }
+
+        .diag-ctrl {
+            padding: 20px 18px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        .ctrl-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            border-bottom: 2px solid #daf5da;
+            padding-bottom: 8px;
+            margin-bottom: 2px
+        }
+
+        .ctrl-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px
+        }
+
+        .ctrl-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2a4a2a
+        }
+
+        .ctrl-group input[type=range] {
+            width: 100%;
+            accent-color: #0a5a0a;
+            cursor: pointer
+        }
+
+        .ctrl-group input[type=number] {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1.5px solid #c2efc2;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: "Times New Roman", serif;
+            color: #0a5a0a;
+            font-weight: 700;
+            outline: none;
+            transition: .2s;
+            box-sizing: border-box
+        }
+
+        .ctrl-group input[type=number]:focus {
+            border-color: #0a5a0a
+        }
+
+        .ctrl-val {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0a5a0a;
+            font-family: "Times New Roman", serif;
+            text-align: center;
+            background: #f1f9f1;
+            border-radius: 8px;
+            padding: 5px
+        }
+
+        .diag-result {
+            border-top: 1px solid #e8f5e8;
+            padding: 14px 20px;
+            background: #f9fff9;
+            font-family: "Times New Roman", serif;
+            font-size: 16px
+        }
+
+        .res-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .res-chip {
+            background: #0a5a0a;
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: "Times New Roman", serif
+        }
+
+        .res-chip.sec {
+            background: #e8f5e8;
+            color: #0a5a0a;
+            border: 1px solid #c2efc2
+        }
+
+        #diag-steps {
+            background: #fff;
+            border-top: 1px solid #e8f5e8;
+            padding: 18px 20px
+        }
+
+        .dstep {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 12px;
+            align-items: flex-start
+        }
+
+        .dstep-n {
+            background: #0a5a0a;
+            color: #fff;
+            min-width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .dstep-t {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1a1a1a;
+            font-style: italic
+        }
+
+        .dstep-m {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #0a5a0a;
+            font-weight: 700
+        }
+
+        /* ═══ TOPIC META BADGES ═══ */
+        .topic-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin: 6px 0 18px
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px
+        }
+
+        .badge-class {
+            background: #e8f0fe;
+            color: #1a5ccf
+        }
+
+        .badge-subject {
+            background: #e6f4ea;
+            color: #1e6e35
+        }
+
+        .badge-imp {
+            background: #fff3e0;
+            color: #bf6000
+        }
+
+        .badge-diff {
+            background: #fce4ec;
+            color: #c62828
+        }
+
+        .badge-type {
+            background: #f3e5f5;
+            color: #6a1b9a
+        }
+
+        /* ═══ INFO CARDS (Given / Assumptions) ═══ */
+        .info-card {
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid transparent
+        }
+
+        .given-card {
+            background: #eef4ff;
+            border-left-color: #1565C0
+        }
+
+        .assumptions-card {
+            background: #fff8f0;
+            border-left-color: #e67e22
+        }
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 6px
+        }
+
+        .info-card p {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #1a1a1a;
+            white-space: pre-wrap
+        }
+
+        /* ═══ FORMULA DISPLAY ═══ */
+        .formula-box {
+            background: linear-gradient(135deg, #f0fff0, #e8f5e8);
+            border: 2px solid #c2efc2;
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            text-align: center
+        }
+
+        .formula-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 8px
+        }
+
+        .formula-expr {
+            font-family: "Times New Roman", serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: #0a5a0a;
+            margin: 4px 0
+        }
+
+        .formula-unit {
+            display: inline-block;
+            margin-top: 8px;
+            background: #0a5a0a;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 14px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        /* ═══ SECTION BANNER (reusable) ═══ */
+        .section-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: linear-gradient(90deg, #e8f5e8, #f5fbf5);
+            border-radius: 10px;
+            border-left: 4px solid #0a5a0a;
+            margin: 28px 0 8px
+        }
+
+        .section-banner i {
+            color: #0a5a0a;
+            font-size: 14px
+        }
+
+        .section-banner span {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .6px
+        }
+
+        /* ═══ CALCULATION STEPS ═══ */
+        .calc-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 12px 14px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e4f0e4;
+            margin-bottom: 8px;
+            transition: border-color .2s, background .2s
+        }
+
+        .calc-step:hover {
+            border-color: #0a5a0a44;
+            background: #f9fff9
+        }
+
+        .calc-step-num {
+            background: linear-gradient(135deg, #0a5a0a, #147a14);
+            color: #fff;
+            min-width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .calc-step-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a3a1a;
+            margin-bottom: 3px
+        }
+
+        .calc-step-formula {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #0a5a0a;
+            font-style: italic
+        }
+
+        /* ═══ RESPONSIVE OVERRIDES ═══ */
+        @media(max-width:600px) {
+            .formula-expr {
+                font-size: 18px
+            }
+
+            .topic-meta-bar {
+                gap: 5px
+            }
+
+            .meta-badge {
+                font-size: 10px;
+                padding: 3px 9px
+            }
+
+            .info-card {
+                padding: 10px 12px
+            }
+
+            .calc-step {
+                padding: 10px 10px;
+                gap: 10px
+            }
+
+            .section-banner {
+                padding: 8px 12px
+            }
+        }
+
+        /* ═══ SIDEBAR FILTER — Redesigned Premium ═══ */
+        .sidebar-filters {
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #daeada
+        }
+
+        .filter-section-lbl {
+            font-size: 9px;
+            font-weight: 800;
+            color: #6aaa6a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block
+        }
+
+        /* Segmented control (Standard) */
+        .seg-ctrl {
+            display: flex;
+            background: #e6f4e6;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+            margin-bottom: 12px
+        }
+
+        .seg-btn {
+            flex: 1;
+            padding: 6px 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #3a6a3a;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .seg-btn:hover {
+            background: rgba(10, 90, 10, .1)
+        }
+
+        .seg-btn.active {
+            background: #0a5a0a;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(10, 90, 10, .3)
+        }
+
+        /* Subject icon cards */
+        .subj-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px
+        }
+
+        .subj-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 4px 6px;
+            border-radius: 10px;
+            border: 1.5px solid #d0e8d0;
+            background: #fff;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 9px;
+            font-weight: 700;
+            color: #3a6a3a;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: .3px
+        }
+
+        .subj-icon {
+            font-size: 17px;
+            line-height: 1
+        }
+
+        .subj-card:hover {
+            border-color: #0a5a0a;
+            background: #f0faf0;
+            transform: translateY(-1px)
+        }
+
+        .subj-card.active {
+            background: linear-gradient(135deg, #0a5a0a, #147a14);
+            color: #fff;
+            border-color: #0a5a0a;
+            box-shadow: 0 3px 10px rgba(10, 90, 10, .25)
+        }
+
+        /* ═══ LESSON-TITLE MINI BADGES ═══ */
+        .lt-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            opacity: .85;
+            white-space: nowrap
+        }
+
+        .lt-badge-std {
+            background: rgba(255, 255, 255, .25);
+            color: #fff
+        }
+
+        .lt-badge-subj {
+            background: rgba(255, 255, 255, .18);
+            color: #ddf0dd;
+            border: 1px solid rgba(255, 255, 255, .25)
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo"><img src="{{ url_for('static', filename='logo.png') }}" alt="Padmasini Logo"></div>
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBar" placeholder="Search concept..." onkeyup="filterTopics()">
+            </div>
+
+            <!-- ── Filter Panel ── -->
+            <div class="sidebar-filters">
+                <span class="filter-section-lbl">Standard</span>
+                <div class="seg-ctrl" id="std-pills"></div>
+                <span class="filter-section-lbl">Subject</span>
+                <div class="subj-grid" id="subj-pills"></div>
+            </div>
+
+            <div id="sidebar-accordion"></div>
+        </aside>
+
+        <main class="main-content">
+            <section class="derivation-panel" id="derivation-view">
+                <div class="topic-header">
+
+                    <!-- Lesson label + meta badges -->
+                    <small id="lesson-label" style="color:var(--pad-green);font-weight:bold;"></small>
+                    <div id="topic-meta-bar" class="topic-meta-bar" style="display:none;"></div>
+
+                    <h1 id="title">Physics Workspace</h1>
+
+                    <!-- Theorem Statement -->
+                    <div id="theorem-container" class="content-section" style="display:none;">
+                        <p id="theoremStatement"></p>
+                    </div>
+
+                    <!-- Conceptual Statement -->
+                    <div id="statement-container" class="content-section">
+                        <p id="statement">Select a topic from the sidebar to view the conceptual derivation.</p>
+                    </div>
+
+                    <!-- Given Data -->
+                    <div id="given-container" class="info-card given-card" style="display:none;">
+                        <div class="info-card-title">
+                            <i class="fas fa-clipboard-list" style="color:#1565C0;"></i>
+                            <span style="color:#1565C0;">Given Data</span>
+                        </div>
+                        <p id="givenData"></p>
+                    </div>
+
+                    <!-- Assumptions -->
+                    <div id="assumptions-container" class="info-card assumptions-card" style="display:none;">
+                        <div class="info-card-title">
+                            <i class="fas fa-check-circle" style="color:#e67e22;"></i>
+                            <span style="color:#e67e22;">Assumptions</span>
+                        </div>
+                        <p id="assumptions"></p>
+                    </div>
+
+                    <!-- Key Formula -->
+                    <div id="expression-container" class="formula-box" style="display:none;">
+                        <div class="formula-title"><i class="fas fa-square-root-variable"></i> Key Formula</div>
+                        <div id="expression-text" class="formula-expr"></div>
+                        <span id="unit-display" class="formula-unit"></span>
+                    </div>
+
+                    <!-- NEET Tips -->
+                    <div id="neet-container" class="content-section" style="display:none;">
+                        <span class="section-tag" style="color:#1a5b05;"><i class="fas fa-lightbulb"></i> NEET
+                            TIPS</span>
+                        <p id="neetTips" style="color:#090909;font-weight:bold;"></p>
+                    </div>
+                </div>
+
+                <!-- ── Derivation Steps header + content ── -->
+                <div id="derivation-header" style="display:none; margin-top:28px; margin-bottom:4px;">
+                    <div
+                        style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:linear-gradient(90deg,#e8f5e8,#f5fbf5);border-radius:10px;border-left:4px solid #0a5a0a;">
+                        <i class="fas fa-list-ol" style="color:#0a5a0a;font-size:14px;"></i>
+                        <span
+                            style="font-size:13px;font-weight:800;color:#0a5a0a;text-transform:uppercase;letter-spacing:.6px;">Derivation
+                            Steps</span>
+                    </div>
+                </div>
+                <div id="derivation-content"></div>
+
+
+
+                <!-- ── Observation Table ── -->
+                <div id="table-view-container" style="display:none;margin-top:20px;margin-bottom:10px;">
+                    <span class="table-caption"><i class="fas fa-table"></i> Observation Data / Reference Table</span>
+                    <div class="observation-table-container" id="observation-table"></div>
+                </div>
+
+                <!-- ── Interactive Diagram + Calculation: after steps ── -->
+                <div id="live-diagram-section" style="margin-top:28px;">
+                    <div class="diag-hdr">
+                        <span><i class="fas fa-drafting-compass"></i>&nbsp; Interactive Diagram</span>
+                        <span class="dtype-badge" id="diag-type-badge">—</span>
+                    </div>
+                    <div class="diag-body">
+                        <div id="diagram-canvas-wrap">
+                            <canvas id="diagramCanvas" width="460" height="300"></canvas>
+                        </div>
+                        <div class="diag-ctrl">
+                            <div class="ctrl-title"><i class="fas fa-sliders-h"></i> Adjust Values</div>
+                            <div id="diag-ctrl-inputs"></div>
+                        </div>
+                    </div>
+                    <div class="diag-result">
+                        <strong style="color:#0a5a0a;font-size:13px;text-transform:uppercase;">Live Results</strong>
+                        <div class="res-row" id="diag-res-row"></div>
+                    </div>
+                    <div id="diag-steps"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- param-panel removed -->
+    </div>
+    <footer class="footer">
+        <p class="foot">@2026, Padmasini innovations Pvt Ltd. All rights reserved</p>
+    </footer>
+
+    <script>
+        const PI = Math.PI;
+        const toRad = d => d * PI / 180;
+        const toDeg = r => r * 180 / PI;
+
+        function cvs() { return document.getElementById('diagramCanvas'); }
+        function ctx2() { return cvs().getContext('2d'); }
+
+        function clr(c) {
+            const x = c || cvs(), g = x.getContext('2d');
+            g.clearRect(0, 0, x.width, x.height);
+            g.fillStyle = '#ffffff'; g.fillRect(0, 0, x.width, x.height);
+        }
+
+        function arrow(g, x1, y1, x2, y2, col, lw) {
+            col = col || '#0a5a0a'; lw = lw || 2;
+            const a = Math.atan2(y2 - y1, x2 - x1), h = 12;
+            g.strokeStyle = col; g.fillStyle = col; g.lineWidth = lw;
+            g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+            g.beginPath();
+            g.moveTo(x2, y2);
+            g.lineTo(x2 - h * Math.cos(a - .4), y2 - h * Math.sin(a - .4));
+            g.lineTo(x2 - h * Math.cos(a + .4), y2 - h * Math.sin(a + .4));
+            g.closePath(); g.fill();
+        }
+
+        function lbl(g, txt, x, y, col, sz, bold) {
+            g.fillStyle = col || '#111'; g.font = (bold ? 'bold ' : '') + ((sz || 15) + 'px "Times New Roman",serif');
+            g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, x, y);
+        }
+
+        function arc(g, cx, cy, r, a1, a2, col, lw) {
+            g.beginPath(); g.arc(cx, cy, r, a1, a2);
+            g.strokeStyle = col || '#0a5a0a'; g.lineWidth = lw || 1.5; g.stroke();
+        }
+
+        const D = {};
+
+        const PARAMS = {};
+
+        const DLABELS = { customImage: 'Custom Diagram' };
+
+        let cVals = {}, cType = '', cTopic = '', currentTopicData = null;
+
+        function buildControls(dtype) {
+            const el = document.getElementById('diag-ctrl-inputs');
+            el.innerHTML = ''; cVals = {};
+            let ps = (dtype === 'customImage' && currentTopicData && currentTopicData.variables) ?
+                currentTopicData.variables.map(v => ({ id: v, label: v, min: 0, max: 200, step: 0.1, def: 10 })) :
+                (PARAMS[dtype] || []);
+
+            ps.forEach(p => {
+                cVals[p.id] = p.def;
+                const d = document.createElement('div'); d.className = 'ctrl-group';
+                d.innerHTML = `<label>${p.label}</label>
+            <input type="range" id="r_${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}" oninput="onCI('${p.id}',this.value,'range')">
+            <input type="number" id="n_${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}" oninput="onCI('${p.id}',this.value,'num')">
+            <div class="ctrl-val" id="v_${p.id}">${p.def}</div>`;
+                el.appendChild(d);
+            });
+        }
+
+        function onCI(pid, raw, src) {
+            const val = parseFloat(raw); if (isNaN(val)) return;
+            cVals[pid] = val;
+            if (src !== 'range') { const r = document.getElementById('r_' + pid); if (r) r.value = val; }
+            if (src !== 'num') { const n = document.getElementById('n_' + pid); if (n) n.value = val; }
+            const vd = document.getElementById('v_' + pid); if (vd) vd.textContent = val;
+            const sideInput = document.getElementById(pid);
+            if (sideInput) sideInput.value = val;
+            redraw();
+        }
+
+        function redraw() {
+            if (!cType) return;
+            if (cType === 'customImage') {
+                const c = cvs(), g = c.getContext('2d');
+                if (currentTopicData && currentTopicData.problemImage) {
+                    const img = new Image();
+                    img.src = currentTopicData.problemImage;
+                    img.onload = () => {
+                        /* Fill the full wrapper width, preserve true aspect ratio */
+                        const wrap = document.getElementById('diagram-canvas-wrap');
+                        const availW = Math.max(wrap.clientWidth - 32, 240);
+                        const availH = Math.min(Math.round(img.height * availW / img.width), window.innerHeight * 0.55);
+                        const scale = Math.min(availW / img.width, availH / img.height);
+                        c.width = Math.round(img.width * scale);
+                        c.height = Math.round(img.height * scale);
+                        const gc = c.getContext('2d');
+                        gc.clearRect(0, 0, c.width, c.height);
+                        gc.drawImage(img, 0, 0, c.width, c.height);
+                    };
+                    img.onerror = () => { clr(c); lbl(g, 'Image failed to load', c.width / 2, c.height / 2, '#c0392b', 15, true); };
+                } else { clr(c); lbl(g, 'No Image Uploaded', c.width / 2, c.height / 2, '#c0392b', 16, true); }
+
+                if (window.calcTimeout) clearTimeout(window.calcTimeout);
+                window.calcTimeout = setTimeout(() => {
+                    fetch("/calculate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicName: cTopic, values: cVals }) })
+                        .then(r => r.json()).then(data => {
+                            let resObj = { results: [], steps: [] };
+                            if (!data.error) {
+                                if (data.result) resObj.results.push({ label: "Final", value: data.result.replace('Final Answer: ', ''), unit: '' });
+                                if (data.steps) {
+                                    let currentStep = { text: '', math: '' };
+                                    data.steps.forEach(s => {
+                                        if (s.startsWith('---')) {
+                                            if (currentStep.text || currentStep.math) resObj.steps.push({ ...currentStep });
+                                            currentStep = { text: s.replace(/---/g, '').trim(), math: '' };
+                                        } else { currentStep.math += (currentStep.math ? '<br>' : '') + s; }
+                                    });
+                                    if (currentStep.text || currentStep.math) resObj.steps.push({ ...currentStep });
+                                }
+                            } else { resObj.steps.push({ text: "Error", math: data.error }); }
+                            updateUI(resObj);
+                        });
+                }, 150);
+                autoCalculate();
+                return;
+            }
+            if (D[cType]) {
+                const res = D[cType](ctx2(), cvs(), cVals);
+                updateUI(res);
+                autoCalculate();
+            }
+        }
+
+        function updateUI(res) {
+            const row = document.getElementById('diag-res-row'); row.innerHTML = '';
+            (res.results || []).forEach(r => {
+                const s = document.createElement('span'); s.className = 'res-chip';
+                s.textContent = `${r.label}: ${r.value} ${r.unit}`; row.appendChild(s);
+            });
+            const so = document.getElementById('diag-steps');
+            if (res.steps && res.steps.length) {
+                let h = `<div style="font-size:13px;font-weight:800;color:#0a5a0a;text-transform:uppercase;margin-bottom:10px;"><i class="fas fa-list-ol"></i> Solution Steps</div>`;
+                res.steps.forEach((s, i) => {
+                    if (!s.text && !s.math) return;
+                    h += `<div class="dstep"><div class="dstep-n">${i + 1}</div><div>${s.text ? `<div class="dstep-t">${s.text}</div>` : ''}${s.math ? `<div class="dstep-m">${s.math}</div>` : ''}</div></div>`;
+                });
+                so.innerHTML = h;
+            } else { so.innerHTML = ''; }
+        }
+
+        function initDiagram(dtype) {
+            const sec = document.getElementById('live-diagram-section');
+            if (!dtype || (!D[dtype] && dtype !== 'customImage')) { sec.style.display = 'none'; cType = ''; return; }
+            cType = dtype; sec.style.display = 'block';
+            document.getElementById('diag-type-badge').textContent = DLABELS[dtype] || dtype;
+            cvs().height = 300; buildControls(dtype); redraw();
+        }
+
+        /* ═══ SIDEBAR DATA + FILTER STATE ═══ */
+        let allTopics = [], activeStd = 'all', activeSubj = 'all';
+
+        function fetchTopics() {
+            fetch("/admin/getAll").then(r => r.json()).then(data => {
+                allTopics = data;
+
+                /* ── Standard: always show All / 11 / 12 + any extras from DB ── */
+                const dbStds = [...new Set(data.map(t => t.standard).filter(Boolean))].sort();
+                const allStds = [...new Set(['11', '12', ...dbStds])].sort();
+                const stdPills = document.getElementById('std-pills');
+                stdPills.innerHTML = `<button class="seg-btn active" onclick="setFilter('std','all',this)">All</button>`;
+                allStds.forEach(s => {
+                    stdPills.innerHTML += `<button class="seg-btn" onclick="setFilter('std','${s}',this)">${s}th</button>`;
+                });
+
+                /* ── Subject: always show All / Physics / Chemistry + any extras from DB ── */
+                const subjectDefs = [
+                    { name: 'Physics', icon: '⚛️' },
+                    { name: 'Chemistry', icon: '⚗️' }
+                ];
+                const dbSubjs = [...new Set(data.map(t => t.subject).filter(Boolean))];
+                /* Merge: built-in first, then any extra subjects from DB not already listed */
+                const knownNames = subjectDefs.map(s => s.name);
+                const extraSubjs = dbSubjs.filter(s => !knownNames.includes(s));
+                const allSubjDefs = [
+                    ...subjectDefs,
+                    ...extraSubjs.map(s => ({ name: s, icon: '📚' }))
+                ];
+
+                const subjPills = document.getElementById('subj-pills');
+                subjPills.innerHTML = `<button class="subj-card active" onclick="setFilter('subj','all',this)"><span class="subj-icon">🔮</span>All</button>`;
+                allSubjDefs.forEach(sd => {
+                    subjPills.innerHTML += `<button class="subj-card" onclick="setFilter('subj','${sd.name}',this)"><span class="subj-icon">${sd.icon}</span>${sd.name}</button>`;
+                });
+
+                renderSidebar();
+            });
+        }
+
+        function setFilter(type, val, btn) {
+            if (type === 'std') {
+                activeStd = val;
+                document.querySelectorAll('#std-pills .seg-btn').forEach(b => b.classList.remove('active'));
+            } else {
+                activeSubj = val;
+                document.querySelectorAll('#subj-pills .subj-card').forEach(b => b.classList.remove('active'));
+            }
+            btn.classList.add('active');
+            renderSidebar();
+        }
+
+        function renderSidebar() {
+            const acc = document.getElementById("sidebar-accordion");
+            acc.innerHTML = "";
+
+            /* Filter by active standard + subject */
+            const filtered = allTopics.filter(t => {
+                const stdOk = activeStd === 'all' || String(t.standard) === String(activeStd);
+                const subjOk = activeSubj === 'all' || t.subject === activeSubj;
+                return stdOk && subjOk;
+            });
+
+            if (!filtered.length) {
+                acc.innerHTML = '<div style="text-align:center;color:#aaa;font-size:12px;padding:24px 8px;"><i class="fas fa-inbox"></i><br>No topics for this filter</div>';
+                return;
+            }
+
+            /* Group by lessonName; store meta per group */
+            const grp = {};
+            filtered.forEach(t => {
+                const key = t.lessonName || 'General';
+                if (!grp[key]) grp[key] = { topics: [], std: t.standard || '', subj: t.subject || '' };
+                grp[key].topics.push(t);
+            });
+
+            for (const lessonName in grp) {
+                const { topics, std, subj } = grp[lessonName];
+                const cont = document.createElement('div'); cont.className = 'lesson-container';
+
+                /* Header with subject + class mini badges */
+                const td = document.createElement('div'); td.className = 'lesson-title';
+                const stdBadge = std ? `<span class="lt-badge lt-badge-std">Cl.${std}</span>` : '';
+                const subjBadge = subj ? `<span class="lt-badge lt-badge-subj">${subj}</span>` : '';
+                td.innerHTML = `<i class="fas fa-layer-group" style="font-size:11px;opacity:.9;"></i>
+                    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${lessonName}</span>
+                    ${stdBadge}${subjBadge}
+                    <i class="fas fa-chevron-down lt-arrow"></i>`;
+
+                /* Topic list */
+                const ul = document.createElement('ul'); ul.className = 'topic-list-nested';
+                topics.forEach(t => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-circle-dot"></i> ${t.topicName}`;
+                    li.onclick = () => loadTopicById(t._id, li);
+                    ul.appendChild(li);
+                });
+                cont.appendChild(td); cont.appendChild(ul); acc.appendChild(cont);
+                td.addEventListener('click', () => cont.classList.toggle('active'));
+            }
+        }
+
+        function loadTopicById(id, el) {
+            document.querySelectorAll('.topic-list-nested li').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+            fetch("/admin/getTopic", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) })
+                .then(r => r.json()).then(data => {
+                    cTopic = data.topicName; currentTopicData = data;
+
+                    /* ── Lesson label ── */
+                    document.getElementById("lesson-label").innerText = data.lessonName || "";
+
+                    /* ── Meta badges ── */
+                    const metaBar = document.getElementById("topic-meta-bar");
+                    const badges = [];
+                    if (data.standard) badges.push(`<span class="meta-badge badge-class"><i class="fas fa-graduation-cap"></i> Class ${data.standard}</span>`);
+                    if (data.subject) badges.push(`<span class="meta-badge badge-subject"><i class="fas fa-flask"></i> ${data.subject}</span>`);
+                    if (data.topicType) badges.push(`<span class="meta-badge badge-type"><i class="fas fa-tag"></i> ${data.topicType}</span>`);
+                    if (data.importance) badges.push(`<span class="meta-badge badge-imp"><i class="fas fa-star"></i> ${data.importance}</span>`);
+                    if (data.difficulty) badges.push(`<span class="meta-badge badge-diff"><i class="fas fa-signal"></i> ${data.difficulty}</span>`);
+                    metaBar.innerHTML = badges.join('');
+                    metaBar.style.display = badges.length ? "flex" : "none";
+
+                    /* ── Title ── */
+                    document.getElementById("title").innerText = data.topicName;
+
+                    /* ── Theorem statement ── */
+                    const thm = data.theoremStatement || "";
+                    document.getElementById("theoremStatement").innerText = thm;
+                    document.getElementById("theorem-container").style.display = thm ? "block" : "none";
+
+                    /* ── Conceptual / statement ── */
+                    const stmt = data.conceptualStatement || data.statement || "";
+                    document.getElementById("statement").innerText = stmt;
+                    document.getElementById("statement-container").style.display = stmt ? "block" : "none";
+
+                    /* ── Given Data ── */
+                    const gd = data.givenData || "";
+                    document.getElementById("givenData").innerText = gd;
+                    document.getElementById("given-container").style.display = gd ? "block" : "none";
+
+                    /* ── Assumptions ── */
+                    const assm = data.assumptions || "";
+                    document.getElementById("assumptions").innerText = assm;
+                    document.getElementById("assumptions-container").style.display = assm ? "block" : "none";
+
+                    /* ── Key Formula + Unit ── */
+                    const expr = data.expression || "";
+                    const unit = data.unit || "";
+                    document.getElementById("expression-text").textContent = expr;
+                    const unitEl = document.getElementById("unit-display");
+                    unitEl.textContent = unit ? `Unit: ${unit}` : "";
+                    unitEl.style.display = unit ? "inline-block" : "none";
+                    document.getElementById("expression-container").style.display = expr ? "block" : "none";
+
+                    /* ── NEET Tips ── */
+                    const tips = data.neetTips || "";
+                    document.getElementById("neetTips").innerText = tips;
+                    document.getElementById("neet-container").style.display = tips ? "block" : "none";
+
+                    /* ── Derivation Steps ── */
+                    const steps = data.derivationSteps || [];
+                    let dh = "";
+                    steps.forEach((s, i) => { dh += `<div class="step-box"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`; });
+                    document.getElementById("derivation-content").innerHTML = dh;
+                    document.getElementById("derivation-header").style.display = steps.length ? "block" : "none";
+
+
+
+                    /* ── Observation Table ── */
+                    const tc = document.getElementById("table-view-container");
+                    if (data.tableData && data.tableData.length > 0) {
+                        tc.style.display = "block";
+                        let h = `<table class="user-data-table">`;
+                        data.tableData.forEach((row, ri) => { h += `<tr>`; row.forEach(cell => { h += ri === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`; }); h += `</tr>`; });
+                        h += `</table>`; document.getElementById("observation-table").innerHTML = h;
+                    } else { tc.style.display = "none"; }
+
+                    /* ── Diagram ── */
+                    initDiagram(data.diagramType || "");
+                });
+        }
+
+        function autoCalculate() {
+            const vals = {};
+            document.querySelectorAll("#inputs input[type='number']").forEach(i => { if (i.value !== "") vals[i.id] = parseFloat(i.value); });
+            if (Object.keys(vals).length > 0) calculate(vals);
+        }
+
+        function calculate(values) {
+            fetch("/calculate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicName: cTopic, values }) })
+                .then(r => r.json()).then(data => {
+                    let sh = "";
+                    (data.steps || []).forEach(s => { sh += `<div class="math-row">${s}</div>`; });
+                    if (data.result) { sh += `<div class="math-result">${data.result}</div>`; }
+                });
+        }
+
+        function filterTopics() {
+            const val = document.getElementById("searchBar").value.toLowerCase();
+            document.querySelectorAll(".topic-list-nested li").forEach(li => {
+                li.style.display = li.innerText.toLowerCase().includes(val) ? "flex" : "none";
+            });
+            /* Hide lesson groups where all topics are hidden */
+            document.querySelectorAll(".lesson-container").forEach(cont => {
+                const anyVisible = [...cont.querySelectorAll('.topic-list-nested li')]
+                    .some(li => li.style.display !== 'none');
+                cont.style.display = val ? (anyVisible ? 'block' : 'none') : 'block';
+                if (val && anyVisible) cont.classList.add('active');
+            });
+        }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        fetchTopics();
+    </script>
+</body>
+
+</html>
