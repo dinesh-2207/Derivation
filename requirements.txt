@@ -1,4 +1,5 @@
-flask
+Flask
 pymongo
 sympy
 python-dotenv
+gunicorn
