@@ -50,6 +50,34 @@
             display: block;
         }
 
+        /* Return button style */
+        .return-btn {
+            background: #0a5a0a;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            margin-right: 15px;
+        }
+
+        .return-btn:hover {
+            background: #0e7a0e;
+            transform: translateY(-2px);
+        }
+
+        .return-btn i {
+            font-size: 14px;
+        }
+
         /* ── Footer exactly matched to index.html style ── */
         .footer {
             height: 90px;
@@ -152,6 +180,12 @@
                 display: flex;
             }
 
+            .return-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                margin-right: 10px;
+            }
+
             .admin-container {
                 display: block;
                 height: auto;
@@ -189,6 +223,7 @@
                 bottom: 0;
                 background: rgba(0, 0, 0, 0.4);
                 z-index: 1500;
+                -webkit-backdrop-filter: blur(2px);
                 backdrop-filter: blur(2px);
                 opacity: 0;
                 transition: 0.3s;
@@ -616,6 +651,9 @@
     <nav class="navbar">
         <div class="logo"><img src="/static/logo.png" alt="Padmasini Logo" onclick="goBackToHome()"
                 style="cursor: pointer;"></div>
+        <button class="return-btn" onclick="goBackToMainApp()">
+            <i class="fas fa-arrow-left"></i> Return to Main Portal
+        </button>
         <button class="menu-toggle" id="menuToggle" onclick="toggleAdminSidebar()">
             <i class="fas fa-bars"></i>
         </button>
@@ -789,7 +827,44 @@
     </footer>
 
     <script>
+        // Parse URL parameters on load
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = urlParams.get('returnUrl');
+        const cardId = urlParams.get('card');
+        const mode = urlParams.get('mode');
+
+        // Store for return navigation
+        if (returnUrl) {
+            sessionStorage.setItem('mainAppReturnUrl', returnUrl);
+        }
+        if (cardId) {
+            sessionStorage.setItem('returnCardId', cardId);
+        }
+        if (mode) {
+            sessionStorage.setItem('returnMode', mode);
+        }
+
         function goBackToHome() { window.location.href = '/'; }
+
+        // New function to return to main app
+        function goBackToMainApp() {
+            const returnUrl = sessionStorage.getItem('mainAppReturnUrl');
+            const returnCardId = sessionStorage.getItem('returnCardId');
+            const returnMode = sessionStorage.getItem('returnMode');
+            
+            if (returnUrl) {
+                // Store which card to reselect when returning
+                const returnData = {
+                    cardId: returnCardId || 'neet',
+                    mode: returnMode || 'professional'
+                };
+                sessionStorage.setItem('returnToAdminLab', JSON.stringify(returnData));
+                window.location.href = returnUrl;
+            } else {
+                // Fallback to home if no return URL
+                window.location.href = '/';
+            }
+        }
 
         function toggleAdminSidebar() {
             const sidebar = document.querySelector('.admin-sidebar');
