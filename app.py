@@ -11,6 +11,7 @@ import uuid
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 UPLOAD_FOLDER = os.path.join("static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
