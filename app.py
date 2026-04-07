@@ -84,18 +84,8 @@ def build_topic_doc(data):
 def admin():
     return render_template("admin.html")
 
-# optional (same admin page)
-@app.route("/admin-lab")
-def admin_lab():
-    return render_template("admin.html")
-
-# user/home page
-@app.route("/")
-def home():
-    return render_template("index.html")
-
 @app.route("/user")
-def user():
+def home():
     return render_template("index.html")
 
 # =============================================================================
