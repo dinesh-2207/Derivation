@@ -78,21 +78,23 @@ def build_topic_doc(data):
 # NAVIGATION ROUTES
 # =============================================================================
 
+# Admin page
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
+
+# optional (same admin page)
 @app.route("/admin-lab")
 def admin_lab():
     return render_template("admin.html")
 
-# ADDED SO IT DIRECTLY LINKS FROM REACT SUCCESSFULLY
-@app.route("/admin")
-def admin_route():
-    return render_template("admin.html")
-
+# user/home page
 @app.route("/")
-def admin_default():
-    return render_template("admin.html")
+def home():
+    return render_template("index.html")
 
 @app.route("/user")
-def home():
+def user():
     return render_template("index.html")
 
 # =============================================================================
