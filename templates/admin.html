@@ -787,32 +787,26 @@
     </footer>
 
     <script>
+        /* ── Dynamic Redirection Logic ── */
         function goBackToHome() {
-            // Read URL variables we sent from React
+            // 1. Get the returnUrl from the current browser address bar
             const params = new URLSearchParams(window.location.search);
             const returnUrl = params.get('returnUrl');
-            
+
             if (returnUrl) {
-                // If the return URL exists, use it to return exactly to the React admin home
-                window.location.href = returnUrl + '/adminhome';
+                // 2. If present, decode it and send the user back to the React Admin Home
+                // Example: http://3.95.172.113:8080/adminhome
+                window.location.href = decodeURIComponent(returnUrl) + "/adminhome";
             } else {
-                // Fallback normal behaviour
-                window.location.href = '/'; 
+                // 3. Fallback: If no returnUrl exists, try to detect the origin 
+                // or go to your main production domain
+                const fallback = window.location.origin.includes('18.232.147.219')
+                    ? "http://3.95.172.113:8080/adminhome"
+                    : "https://trilokinnovations.com/adminhome";
+
+                window.location.href = fallback;
             }
         }
-
-        function toggleAdminSidebar() {
-            const sidebar = document.querySelector('.admin-sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            if (sidebar.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
-        }
-
         /* ── Diagram type info hints ── */
         function onDiagTypeChange(val) {
             const box = document.getElementById('diag-info-box');

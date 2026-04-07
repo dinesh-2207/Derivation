@@ -244,5 +244,22 @@ def admin_upload_image():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# =============================================================================
+# NAVIGATION ROUTES - Optimized for Production Redirects
+# =============================================================================
+
+@app.route("/admin")
+@app.route("/admin-lab")
+def admin_route():
+    # This renders the admin page and preserves the ?returnUrl= query string
+    # so the JavaScript goBackToHome() function can read it.
+    return render_template("admin.html")
+
+@app.route("/")
+def admin_default():
+    return render_template("admin.html")
+
+# Ensure this is at the very bottom of app.py
 if __name__ == "__main__":
-    app.run(debug=True)
+    # host='0.0.0.0' is REQUIRED for AWS EC2 to accept external traffic
+    app.run(host='0.0.0.0', port=5000, debug=False)
