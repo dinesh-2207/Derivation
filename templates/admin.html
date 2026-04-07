@@ -20,7 +20,6 @@
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
-            /* Strict lock to prevent horizontal scroll */
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #fbfdfb;
             color: #1a2e1a;
@@ -404,7 +403,6 @@
 
         option {
             font-size: 14.5px;
-            /* FIX: Padding removed to prevent Chrome native dropdown overflow bug */
         }
 
         input:focus,
@@ -789,7 +787,19 @@
     </footer>
 
     <script>
-        function goBackToHome() { window.location.href = '/'; }
+        function goBackToHome() {
+            // Read URL variables we sent from React
+            const params = new URLSearchParams(window.location.search);
+            const returnUrl = params.get('returnUrl');
+            
+            if (returnUrl) {
+                // If the return URL exists, use it to return exactly to the React admin home
+                window.location.href = returnUrl + '/adminhome';
+            } else {
+                // Fallback normal behaviour
+                window.location.href = '/'; 
+            }
+        }
 
         function toggleAdminSidebar() {
             const sidebar = document.querySelector('.admin-sidebar');

@@ -81,6 +81,11 @@ def build_topic_doc(data):
 def admin_lab():
     return render_template("admin.html")
 
+# ADDED SO IT DIRECTLY LINKS FROM REACT SUCCESSFULLY
+@app.route("/admin")
+def admin_route():
+    return render_template("admin.html")
+
 @app.route("/")
 def admin_default():
     return render_template("admin.html")
