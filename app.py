@@ -246,5 +246,4 @@ def admin_upload_image():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    # In production, host must be '0.0.0.0' to accept external traffic
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)
