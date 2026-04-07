@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from pymongo import MongoClient
+from flask_cors import CORS
 from sympy import sympify
 from dotenv import load_dotenv
 from bson import ObjectId

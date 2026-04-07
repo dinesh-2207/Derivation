@@ -791,13 +791,13 @@
         function goBackToHome() {
             const params = new URLSearchParams(window.location.search);
             const returnUrl = params.get('returnUrl');
+            const card = params.get('card');
+            const mode = params.get('mode');
 
             if (returnUrl) {
-                // Redirects back to http://54.234.93.138:8080/adminhome
-                window.location.href = decodeURIComponent(returnUrl) + "/adminhome";
-            } else {
-                // Fallback logic
-                window.location.href = "http://18.232.147.219:5000/adminhome";
+                window.location.href =
+                    decodeURIComponent(returnUrl) +
+                    `/adminhome?card=${card}&mode=${mode}`;
             }
         }
         /* ── Diagram type info hints ── */
