@@ -80,7 +80,7 @@ def build_topic_doc(data):
 # =============================================================================
 
 # Admin page
-@app.route("/admin")
+@app.route("/")
 def admin():
     return render_template("admin.html")
 
