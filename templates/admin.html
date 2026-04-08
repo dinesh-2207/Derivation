@@ -791,6 +791,7 @@
         const API_BASE_URL = window.location.origin;
 
         /* ── Dynamic Redirection Logic ── */
+        /* ── Dynamic Redirection Logic ── */
         function goBackToHome() {
             const params = new URLSearchParams(window.location.search);
             const returnUrl = params.get('returnUrl');
@@ -798,20 +799,28 @@
             const mode = params.get('mode');
 
             if (returnUrl) {
-                
                 let baseUrl = decodeURIComponent(returnUrl);
                 if (baseUrl.endsWith('/')) {
                     baseUrl = baseUrl.slice(0, -1);
                 }
 
-                
-                const finalUrl = `${baseUrl}/adminhome?card=${card}&mode=${mode}`;
+                // Construct the return URL with proper parameters
+                let finalUrl = `${baseUrl}/adminhome`;
+
+                // Add query parameters if they exist
+                const queryParams = [];
+                if (card) queryParams.push(`card=${card}`);
+                if (mode) queryParams.push(`mode=${mode}`);
+
+                if (queryParams.length > 0) {
+                    finalUrl += `?${queryParams.join('&')}`;
+                }
 
                 console.log("Redirecting back to:", finalUrl);
                 window.location.href = finalUrl;
             } else {
-                
-                window.location.href = '/';
+                // Fallback: redirect to main admin home
+                window.location.href = '/adminhome';
             }
         }
         /* ── Diagram type info hints ── */
