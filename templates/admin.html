@@ -787,6 +787,8 @@
     </footer>
 
     <script>
+
+        const API_BASE_URL = "http://localhost:80/api";
         /* ── Dynamic Redirection Logic ── */
         function goBackToHome() {
             const params = new URLSearchParams(window.location.search);
@@ -861,19 +863,21 @@
             const fi = document.getElementById('imageInput');
             if (!fi.files[0]) return;
 
+            // 1. Create FormData and APPEND the file
             const fd = new FormData();
+            fd.append('image', fi.files[0]); // 👈 Indha line kandippa irukkanum
 
             try {
+                // 2. Use API_BASE_URL (Ensure this is defined in your script)
                 const res = await fetch(`${API_BASE_URL}/admin/uploadImage`, {
                     method: 'POST',
                     body: fd,
-                    
+                    // 3. Cookies anuppa idhu mukkiyam
                     credentials: 'include'
                 });
 
-                
                 if (res.status === 403) {
-                    alert("Permission Denied (403). Session expired or CloudFront blocked the request.");
+                    alert("Permission Denied (403). Session expired or CloudFront WAF blocked the request.");
                     return;
                 }
 
@@ -884,10 +888,11 @@
                     const p = document.getElementById('imagePreview');
                     p.src = data.imagePath;
                     p.style.display = 'block';
+                    alert("Image uploaded successfully!");
                 }
             } catch (err) {
                 console.error("Upload failed", err);
-                alert("Upload failed. Make sure the API is reachable.");
+                alert("Upload failed. Make sure API_BASE_URL is correct and backend is running.");
             }
         }
 
