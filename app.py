@@ -11,7 +11,10 @@ import uuid
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["https://d3ty37mf4sf9cz.cloudfront.net"])
+CORS(app, supports_credentials=True, origins=[
+    "https://d3ty37mf4sf9cz.cloudfront.net", # Trilok Main App
+    "https://d2l8p0hsuvduse.cloudfront.net"  # Admin Lab Project
+])
 
 UPLOAD_FOLDER = os.path.join("static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
