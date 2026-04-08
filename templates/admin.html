@@ -788,7 +788,6 @@
 
     <script>
 
-        const API_BASE_URL = "https://dafj1druksig9.cloudfront.net/api";
         /* ── Dynamic Redirection Logic ── */
         function goBackToHome() {
             const params = new URLSearchParams(window.location.search);
@@ -797,9 +796,20 @@
             const mode = params.get('mode');
 
             if (returnUrl) {
-                window.location.href =
-                    decodeURIComponent(returnUrl) +
-                    `/adminhome?card=${card}&mode=${mode}`;
+                
+                let baseUrl = decodeURIComponent(returnUrl);
+                if (baseUrl.endsWith('/')) {
+                    baseUrl = baseUrl.slice(0, -1);
+                }
+
+                
+                const finalUrl = `${baseUrl}/adminhome?card=${card}&mode=${mode}`;
+
+                console.log("Redirecting back to:", finalUrl);
+                window.location.href = finalUrl;
+            } else {
+                
+                window.location.href = '/';
             }
         }
         /* ── Diagram type info hints ── */
