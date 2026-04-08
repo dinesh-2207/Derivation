@@ -858,15 +858,36 @@
         }
 
         async function uploadImage() {
-            const fi = document.getElementById('imageInput'); if (!fi.files[0]) return;
-            const fd = new FormData(); fd.append('image', fi.files[0]);
+            const fi = document.getElementById('imageInput');
+            if (!fi.files[0]) return;
+
+            const fd = new FormData();
+
             try {
-                const res = await fetch('/admin/uploadImage', { method: 'POST', body: fd });
+                const res = await fetch(`${API_BASE_URL}/admin/uploadImage`, {
+                    method: 'POST',
+                    body: fd,
+                    
+                    credentials: 'include'
+                });
+
+                
+                if (res.status === 403) {
+                    alert("Permission Denied (403). Session expired or CloudFront blocked the request.");
+                    return;
+                }
+
                 const data = await res.json();
-                if (data.imagePath) { document.getElementById('problemImagePath').value = data.imagePath; const p = document.getElementById('imagePreview'); p.src = data.imagePath; p.style.display = 'block'; }
+
+                if (data.imagePath) {
+                    document.getElementById('problemImagePath').value = data.imagePath;
+                    const p = document.getElementById('imagePreview');
+                    p.src = data.imagePath;
+                    p.style.display = 'block';
+                }
             } catch (err) {
                 console.error("Upload failed", err);
-                alert("Upload failed. Ensure backend is running.");
+                alert("Upload failed. Make sure the API is reachable.");
             }
         }
 
