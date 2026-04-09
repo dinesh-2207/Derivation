@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --navbar-height: 70px; /* Fixed Header Height */
+            --footer-height: 45px; /* Fixed Footer Height */
+        }
+
+        /* Prevent body scroll to let internal containers handle scrolling */
+        body {
+            margin: 0;
+            overflow: hidden !important; 
+        }
+
         .step-text,
         .topic-header p,
         .math-row,
@@ -48,41 +59,194 @@
             margin-top: 10px
         }
 
-        /* ═══ SIDEBAR — Professional Light Theme ═══ */
-        .lesson-container {
-            margin-bottom: 8px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #e2ede2;
-            box-shadow: 0 2px 8px rgba(10, 90, 10, 0.06);
-            transition: box-shadow .25s
+        /* ═══ HEADER, FOOTER & LAYOUT FIXES ═══ */
+        .navbar {
+            height: var(--navbar-height) !important;
+            position: fixed !important; 
+            top: 0 !important;
+            left: 0;
+            width: 100%;
+            z-index: 1050 !important; 
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #daeada;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
         }
 
-        .lesson-container:hover {
-            box-shadow: 0 4px 14px rgba(10, 90, 10, 0.12)
+        .footer {
+            height: var(--footer-height) !important;
+            position: fixed !important; 
+            bottom: 0 !important;
+            left: 0;
+            width: 100%;
+            z-index: 1050 !important; 
+            background: linear-gradient(180deg, #ffffff 0%, #f0faf0 100%);
+            border-top: 1px solid #daeada;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a6a4a;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .footer .foot {
+            margin: 0;
+        }
+
+        /* Layout fits EXACTLY between Header and Footer */
+        .layout {
+            display: flex !important;
+            margin-top: var(--navbar-height) !important; 
+            height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important; 
+            overflow: hidden !important; 
+            position: relative;
+        }
+
+        /* ═══ SIDEBAR FIXES ═══ */
+        .sidebar {
+            background-color: #ffffff !important;
+            width: 340px !important; 
+            min-width: 340px !important;
+            flex-shrink: 0 !important;
+            border-right: 1px solid #daeada; 
+            height: 100% !important; 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        .sidebar-neet-header,
+        .search-container,
+        .sidebar-filters {
+            flex-shrink: 0;
+            background-color: #ffffff;
+        }
+
+        #sidebar-accordion {
+            flex-grow: 1;
+            overflow-y: auto; 
+            padding-bottom: 20px; 
+        }
+
+        /* ═══ MAIN CONTENT INDEPENDENT SCROLL ═══ */
+        .main-content {
+            flex-grow: 1 !important;
+            height: 100% !important; 
+            overflow-y: auto !important; 
+            padding: 35px 45px 35px 45px !important; 
+            box-sizing: border-box !important;
+            max-width: calc(100% - 340px);
+            background-color: #fcfdfc;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .main-content::-webkit-scrollbar-track {
+            background: #f0f8f0;
+        }
+        .main-content::-webkit-scrollbar-thumb {
+            background: #a8d5a8;
+            border-radius: 10px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--navbar-height) - var(--footer-height));
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* --- NEET Header Styles --- */
+        .sidebar-neet-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 15px 15px 15px !important; 
+            margin-top: 0 !important; 
+            border-bottom: 1px solid #daeada;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-neet-header .back-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #555;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-neet-header .neet-btn {
+            flex: 1;
+            background: #3b823e; 
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .lesson-container {
+            margin-bottom: 5px;
+            border-radius: 0;
+            overflow: hidden;
+            border: none;
+            border-bottom: 1px solid #f0f0f0; 
+            box-shadow: none;
         }
 
         .lesson-title {
-            padding: 11px 14px;
-            background: linear-gradient(135deg, #0a5a0a 0%, #147a14 100%);
-            color: #fff;
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: .5px;
-            text-transform: uppercase;
+            padding: 12px 14px;
+            background: #ffffff; 
+            color: #3b823e; 
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: .2px;
             display: flex;
             align-items: center;
             gap: 9px;
             cursor: pointer;
-            transition: background .25s;
+            transition: background .2s;
             position: relative;
-            user-select: none
+            user-select: none;
         }
 
         .lesson-title .lt-arrow {
             margin-left: auto;
-            font-size: 10px;
-            opacity: .7;
+            font-size: 12px;
+            color: #888;
             transition: transform .3s
         }
 
@@ -91,60 +255,62 @@
         }
 
         .lesson-title:hover {
-            background: linear-gradient(135deg, #0d6e0d 0%, #1a8a1a 100%)
+            background: #f9f9f9;
         }
 
         .topic-list-nested {
             list-style: none;
-            padding: 6px 6px;
+            padding: 0 6px 6px 6px;
             margin: 0;
             max-height: 0;
             overflow: hidden;
             background: #fff;
-            transition: max-height .35s cubic-bezier(.4, 0, .2, 1)
+            transition: max-height .4s ease-in-out;
         }
 
         .lesson-container.active .topic-list-nested {
-            max-height: 600px
+            max-height: 3000px; 
         }
 
         .topic-list-nested li {
-            padding: 9px 10px 9px 12px;
-            font-size: 13px;
+            padding: 9px 10px 9px 24px; 
+            font-size: 14px;
             cursor: pointer;
             transition: all .2s;
             display: flex;
             align-items: center;
             gap: 8px;
             border-radius: 8px;
-            color: #2a4a2a;
+            color: #444; 
             border-left: 3px solid transparent;
             margin-bottom: 2px
         }
 
         .topic-list-nested li i {
-            font-size: 11px;
-            color: #6aaa6a;
+            font-size: 12px;
+            color: #777; 
             flex-shrink: 0
         }
 
         .topic-list-nested li:hover {
             background: #f0faf0;
-            border-left-color: #4caf4c;
-            color: #0a5a0a;
-            padding-left: 16px
+            color: #3b823e;
         }
 
         .topic-list-nested li.active {
-            background: linear-gradient(90deg, #e8f5e8, #f5fbf5);
-            border-left: 3px solid #0a5a0a;
-            color: #0a5a0a;
+            background: #f5fbf5;
+            border-left: 3px solid #3b823e;
+            color: #3b823e;
             font-weight: 700;
-            padding-left: 16px
         }
 
         .topic-list-nested li.active i {
-            color: #0a5a0a
+            color: #3b823e
+        }
+
+        .sidebar .search-container {
+            padding: 0 15px 15px 15px;
+            position: relative;
         }
 
         .sidebar .search-container input {
@@ -152,7 +318,6 @@
             color: #1a3a1a;
             border: 1.5px solid #d0e8d0;
             box-shadow: 0 2px 6px rgba(10, 90, 10, 0.04);
-
             height: 34px;
             padding: 0 10px 0 32px;
             font-size: 13px;
@@ -162,9 +327,9 @@
         }
 
         .sidebar .search-container input:focus {
-            border-color: #0a5a0a;
+            border-color: #3b823e;
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(10, 90, 10, 0.12)
+            box-shadow: 0 0 0 3px rgba(59, 130, 62, 0.12)
         }
 
         .sidebar .search-container input::placeholder {
@@ -172,18 +337,20 @@
         }
 
         .sidebar .search-container i {
-            color: #0a5a0a
+            color: #3b823e;
+            position: absolute;
+            left: 26px;
+            top: 10px;
+            font-size: 14px;
         }
 
-        .sidebar::-webkit-scrollbar {
+        #sidebar-accordion::-webkit-scrollbar {
             width: 5px
         }
-
-        .sidebar::-webkit-scrollbar-track {
+        #sidebar-accordion::-webkit-scrollbar-track {
             background: #f0f8f0
         }
-
-        .sidebar::-webkit-scrollbar-thumb {
+        #sidebar-accordion::-webkit-scrollbar-thumb {
             background: linear-gradient(#a8d5a8, #6aaa6a);
             border-radius: 10px
         }
@@ -241,7 +408,6 @@
             margin-bottom: 5px
         }
 
-        /* ═══ LIVE DIAGRAM ENGINE ═══ */
         #live-diagram-section {
             margin: 28px 0;
             border: 1.5px solid #c2efc2;
@@ -278,17 +444,35 @@
             grid-template-columns: 1fr 265px
         }
 
+        /* ═══ MOBILE / RESPONSIVE FIXES ═══ */
         @media(max-width:900px) {
+            .sidebar {
+                position: fixed !important;
+                left: -350px !important; 
+                top: var(--navbar-height) !important;
+                height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important; 
+                box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            }
+            .sidebar.active {
+                left: 0 !important; 
+            }
+            .sidebar-overlay {
+                top: var(--navbar-height) !important;
+                height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important;
+            }
+            .main-content {
+                max-width: 100% !important;
+                width: 100%;
+                padding: 25px 20px 35px 20px !important;
+            }
             .diag-body {
                 grid-template-columns: 1fr
             }
-
             #diagram-canvas-wrap {
                 border-right: none;
                 border-bottom: 1px solid #e8f5e8;
                 min-height: 240px
             }
-
             .diag-ctrl {
                 padding: 14px 12px
             }
@@ -299,31 +483,22 @@
                 font-size: 11px;
                 padding: 10px 14px
             }
-
-            .diag-body {
-                grid-template-columns: 1fr
-            }
-
             #diagramCanvas {
                 width: 100%;
                 height: auto
             }
-
             #diagram-canvas-wrap {
                 padding: 12px;
                 min-height: 200px
             }
-
             .diag-result {
                 padding: 10px 14px;
                 font-size: 14px
             }
-
             .res-chip {
                 font-size: 12px;
                 padding: 4px 10px
             }
-
             #diag-steps {
                 padding: 12px 14px
             }
@@ -487,7 +662,6 @@
             font-weight: 700
         }
 
-        /* ═══ TOPIC META BADGES ═══ */
         .topic-meta-bar {
             display: flex;
             flex-wrap: wrap;
@@ -532,7 +706,6 @@
             color: #6a1b9a
         }
 
-        /* ═══ INFO CARDS (Given / Assumptions) ═══ */
         .info-card {
             border-radius: 10px;
             padding: 13px 16px;
@@ -569,7 +742,6 @@
             white-space: pre-wrap
         }
 
-        /* ═══ FORMULA DISPLAY ═══ */
         .formula-box {
             background: linear-gradient(135deg, #f0fff0, #e8f5e8);
             border: 2px solid #c2efc2;
@@ -607,7 +779,6 @@
             font-weight: 700
         }
 
-        /* ═══ SECTION BANNER (reusable) ═══ */
         .section-banner {
             display: flex;
             align-items: center;
@@ -632,7 +803,6 @@
             letter-spacing: .6px
         }
 
-        /* ═══ CALCULATION STEPS ═══ */
         .calc-step {
             display: flex;
             align-items: flex-start;
@@ -679,39 +849,9 @@
             font-style: italic
         }
 
-        /* ═══ RESPONSIVE OVERRIDES ═══ */
-        @media(max-width:600px) {
-            .formula-expr {
-                font-size: 18px
-            }
-
-            .topic-meta-bar {
-                gap: 5px
-            }
-
-            .meta-badge {
-                font-size: 10px;
-                padding: 3px 9px
-            }
-
-            .info-card {
-                padding: 10px 12px
-            }
-
-            .calc-step {
-                padding: 10px 10px;
-                gap: 10px
-            }
-
-            .section-banner {
-                padding: 8px 12px
-            }
-        }
-
-        /* ═══ SIDEBAR FILTER — Redesigned Premium ═══ */
         .sidebar-filters {
-            margin-bottom: 14px;
-            padding-bottom: 14px;
+            padding: 0 15px 14px 15px;
+            margin-bottom: 0;
             border-bottom: 1px solid #daeada
         }
 
@@ -725,7 +865,6 @@
             display: block
         }
 
-        /* Segmented control (Standard) */
         .seg-ctrl {
             display: flex;
             background: #e6f4e6;
@@ -760,7 +899,6 @@
             box-shadow: 0 2px 8px rgba(10, 90, 10, .3)
         }
 
-        /* Subject icon cards */
         .subj-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -792,7 +930,7 @@
         }
 
         .subj-card:hover {
-            border-color: #0a5a0a;
+            border-color: #3b823e;
             background: #f0faf0;
             transform: translateY(-1px)
         }
@@ -804,26 +942,25 @@
             box-shadow: 0 3px 10px rgba(10, 90, 10, .25)
         }
 
-        /* ═══ LESSON-TITLE MINI BADGES ═══ */
         .lt-badge {
             font-size: 9px;
             font-weight: 700;
             padding: 2px 7px;
             border-radius: 10px;
-            opacity: .85;
+            opacity: 1;
             white-space: nowrap
         }
 
         .lt-badge-std {
-            background: rgba(255, 255, 255, .25);
-            color: #fff
+            background: #e8f0fe;
+            color: #1a5ccf
         }
 
         .lt-badge-subj {
-            background: rgba(255, 255, 255, .18);
-            color: #ddf0dd;
-            border: 1px solid rgba(255, 255, 255, .25)
+            background: #e6f4ea;
+            color: #1e6e35;
         }
+
     </style>
 </head>
 
@@ -838,12 +975,16 @@
 
     <div class="layout">
         <aside class="sidebar">
+            <div class="sidebar-neet-header">
+                <button class="back-btn" onclick="if(window.innerWidth <= 900) toggleSidebar();"><i class="fas fa-arrow-left"></i></button>
+                <div class="neet-btn">NEET</div>
+            </div>
+
             <div class="search-container">
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchBar" placeholder="Search concept..." onkeyup="filterTopics()">
             </div>
 
-            <!-- ── Filter Panel ── -->
             <div class="sidebar-filters">
                 <span class="filter-section-lbl">Standard</span>
                 <div class="seg-ctrl" id="std-pills"></div>
@@ -858,23 +999,19 @@
             <section class="derivation-panel" id="derivation-view">
                 <div class="topic-header">
 
-                    <!-- Lesson label + meta badges -->
                     <small id="lesson-label" style="color:var(--pad-green);font-weight:bold;"></small>
                     <div id="topic-meta-bar" class="topic-meta-bar" style="display:none;"></div>
 
-                    <h1 id="title">Physics Workspace</h1>
+                    <h1 id="title">Workspace</h1>
 
-                    <!-- Theorem Statement -->
                     <div id="theorem-container" class="content-section" style="display:none;">
                         <p id="theoremStatement"></p>
                     </div>
 
-                    <!-- Conceptual Statement -->
                     <div id="statement-container" class="content-section">
                         <p id="statement">Select a topic from the sidebar to view the conceptual derivation.</p>
                     </div>
 
-                    <!-- Given Data -->
                     <div id="given-container" class="info-card given-card" style="display:none;">
                         <div class="info-card-title">
                             <i class="fas fa-clipboard-list" style="color:#1565C0;"></i>
@@ -883,7 +1020,6 @@
                         <p id="givenData"></p>
                     </div>
 
-                    <!-- Assumptions -->
                     <div id="assumptions-container" class="info-card assumptions-card" style="display:none;">
                         <div class="info-card-title">
                             <i class="fas fa-check-circle" style="color:#e67e22;"></i>
@@ -892,14 +1028,12 @@
                         <p id="assumptions"></p>
                     </div>
 
-                    <!-- Key Formula -->
                     <div id="expression-container" class="formula-box" style="display:none;">
                         <div class="formula-title"><i class="fas fa-square-root-variable"></i> Key Formula</div>
                         <div id="expression-text" class="formula-expr"></div>
                         <span id="unit-display" class="formula-unit"></span>
                     </div>
 
-                    <!-- NEET Tips -->
                     <div id="neet-container" class="content-section" style="display:none;">
                         <span class="section-tag" style="color:#1a5b05;"><i class="fas fa-lightbulb"></i> NEET
                             TIPS</span>
@@ -907,7 +1041,6 @@
                     </div>
                 </div>
 
-                <!-- ── Derivation Steps header + content ── -->
                 <div id="derivation-header" style="display:none; margin-top:28px; margin-bottom:4px;">
                     <div
                         style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:linear-gradient(90deg,#e8f5e8,#f5fbf5);border-radius:10px;border-left:4px solid #0a5a0a;">
@@ -919,15 +1052,11 @@
                 </div>
                 <div id="derivation-content"></div>
 
-
-
-                <!-- ── Observation Table ── -->
                 <div id="table-view-container" style="display:none;margin-top:20px;margin-bottom:10px;">
                     <span class="table-caption"><i class="fas fa-table"></i> Observation Data / Reference Table</span>
                     <div class="observation-table-container" id="observation-table"></div>
                 </div>
 
-                <!-- ── Interactive Diagram + Calculation: after steps ── -->
                 <div id="live-diagram-section" style="margin-top:28px;">
                     <div class="diag-hdr">
                         <span><i class="fas fa-drafting-compass"></i>&nbsp; Interactive Diagram</span>
@@ -950,9 +1079,8 @@
                 </div>
             </section>
         </main>
-
-        <!-- param-panel removed -->
     </div>
+
     <footer class="footer">
         <p class="foot">@2026, Padmasini innovations Pvt Ltd. All rights reserved</p>
     </footer>
@@ -1038,7 +1166,6 @@
                     const img = new Image();
                     img.src = currentTopicData.problemImage;
                     img.onload = () => {
-                        /* Fill the full wrapper width, preserve true aspect ratio */
                         const wrap = document.getElementById('diagram-canvas-wrap');
                         const availW = Math.max(wrap.clientWidth - 32, 240);
                         const availH = Math.min(Math.round(img.height * availW / img.width), window.innerHeight * 0.55);
@@ -1192,17 +1319,25 @@
                 const td = document.createElement('div'); td.className = 'lesson-title';
                 const stdBadge = std ? `<span class="lt-badge lt-badge-std">Cl.${std}</span>` : '';
                 const subjBadge = subj ? `<span class="lt-badge lt-badge-subj">${subj}</span>` : '';
-                td.innerHTML = `<i class="fas fa-layer-group" style="font-size:11px;opacity:.9;"></i>
+                
+                td.innerHTML = `
                     <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${lessonName}</span>
                     ${stdBadge}${subjBadge}
-                    <i class="fas fa-chevron-down lt-arrow"></i>`;
+                    <i class="fas fa-minus lt-arrow"></i>`;
 
                 /* Topic list */
                 const ul = document.createElement('ul'); ul.className = 'topic-list-nested';
                 topics.forEach(t => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<i class="fas fa-circle-dot"></i> ${t.topicName}`;
-                    li.onclick = () => loadTopicById(t._id, li);
+                    li.innerHTML = `<i class="fas fa-caret-right"></i> ${t.topicName}`;
+                    li.onclick = () => {
+                        loadTopicById(t._id, li);
+                        // Auto-hide sidebar on mobile after clicking a topic
+                        if (window.innerWidth <= 900) {
+                            document.querySelector('.sidebar').classList.remove('active');
+                            document.getElementById('sidebarOverlay').classList.remove('active');
+                        }
+                    };
                     ul.appendChild(li);
                 });
                 cont.appendChild(td); cont.appendChild(ul); acc.appendChild(cont);
