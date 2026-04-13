@@ -763,7 +763,10 @@
                 <div class="form-group">
                     <label><i class="fas fa-calculator"></i> Calculation Sequence</label>
                     <div id="calcStepsContainer"></div>
-                    <button type="button" class="btn btn-add" onclick="addCalcStepField()">+ Add Logic Formula</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-add" onclick="addCalcStepField()">+ Add Logic Formula</button>
+                        <button type="button" class="btn btn-add" style="background: #0288d1;" onclick="autoGenerateCalcSteps()"><i class="fas fa-magic"></i> Auto Generate Steps</button>
+                    </div>
                 </div>
 
                 <h4 class="section-header">Observation Table</h4>
@@ -851,6 +854,33 @@
             const d = document.createElement('div'); d.className = 'dynamic-list-item';
             d.innerHTML = `<input type="text" placeholder="Label (e.g., Force)" value="${label}" style="flex:1"><input type="text" placeholder="Formula (e.g., m*a)" value="${formula}" style="flex:1.5"><button type="button" class="btn btn-delete" onclick="this.parentElement.remove()"><i class="fas fa-times"></i> Remove</button>`;
             document.getElementById('calcStepsContainer').appendChild(d);
+        }
+
+        function autoGenerateCalcSteps() {
+            const expression = document.getElementById('expression').value.trim();
+            if (!expression) {
+                alert("Please enter the 'Final Mathematical Expression' first. \n\nNote: For fully automated AI guessing based ONLY on Lesson/Question Name, an AI API (like Gemini) integration is required in the backend.");
+                return;
+            }
+            
+            const calcContainer = document.getElementById('calcStepsContainer');
+            if (calcContainer.children.length > 0) {
+                if (!confirm("This will replace your current calculation steps. Continue?")) {
+                    return;
+                }
+            }
+            
+            calcContainer.innerHTML = '';
+            
+            // Auto generates a single calculation step using the expression
+            // If the expression already contains an '=' (e.g. s = u*t + 0.5*a*t**2), use it directly
+            // Otherwise, prepend 'Ans = '
+            let finalFormula = expression;
+            if (!expression.includes('=')) {
+                finalFormula = 'Ans = ' + expression;
+            }
+            
+            addCalcStepField('Final Result', finalFormula);
         }
 
         function generateTable(existingData = null) {

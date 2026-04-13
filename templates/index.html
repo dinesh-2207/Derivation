@@ -1394,8 +1394,15 @@
                     const unit = data.unit || "";
                     document.getElementById("expression-text").textContent = expr;
                     const unitEl = document.getElementById("unit-display");
-                    unitEl.textContent = unit ? `Unit: ${unit}` : "";
-                    unitEl.style.display = unit ? "inline-block" : "none";
+                    
+                    // Do not show the unit here if it is a dynamic template string
+                    if (unit && !unit.includes('{')) {
+                        unitEl.textContent = `Unit: ${unit}`;
+                        unitEl.style.display = "inline-block";
+                    } else {
+                        unitEl.style.display = "none";
+                    }
+                    
                     document.getElementById("expression-container").style.display = expr ? "block" : "none";
 
                     /* ── NEET Tips ── */

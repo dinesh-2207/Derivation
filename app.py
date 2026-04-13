@@ -138,33 +138,105 @@ def calculate():
         unit = topic.get("unit", "")
 
         if not calc_steps:
-            calc_steps = [{"label": "Result", "formula": f"Ans = {topic.get('expression')}"}]
+            raw_expr = topic.get('expression', '')
+            if '=' in raw_expr:
+                calc_steps = [{"label": "Result", "formula": raw_expr}]
+            else:
+                calc_steps = [{"label": "Result", "formula": f"Ans = {raw_expr}"}]
 
         last_lhs = ""
         for step in calc_steps:
             label, formula = step.get("label"), step.get("formula")
             if not formula or "=" not in formula:
                 continue
-            lhs, rhs = [x.strip() for x in formula.split("=", 1)]
+            
+            parts = [x.strip() for x in formula.split("=")]
+            lhs = parts[-2]
+            rhs = parts[-1]
             last_lhs = lhs
-            display_formula = rhs.replace("*", " × ").replace("**", "^")
+            
+            # Format exactly as requested for Formula: s = u*t + ½*a*t² -> s = ut + ½at²
+            display_formula = rhs.replace('0.5', '½').replace('0.25', '¼').replace('**2', '²').replace('**3', '³')
+            display_formula = display_formula.replace(" ", "").replace("+", " + ").replace("-", " - ")
+            display_formula = display_formula.replace("*", "")
+            
             steps_output.append(f"--- {label} ---")
             steps_output.append(f"Formula: {lhs} = {display_formula}")
-            substituted_rhs = rhs
-            for var in sorted(resolved_vars.keys(), key=len, reverse=True):
-                substituted_rhs = re.sub(rf"\b{var}\b", str(resolved_vars[var]), substituted_rhs)
-            display_sub = substituted_rhs.replace("*", " × ").replace("**", "^")
+            
+            # Evaluate step numerically
+            cleaned_rhs = rhs.replace('½', '0.5').replace('¼', '0.25').replace('¾', '0.75')
+            cleaned_rhs = cleaned_rhs.replace('²', '**2').replace('³', '**3').replace('^2', '**2').replace('^3', '**3')
+            
+            formatted_vars = {}
+            for k, v in resolved_vars.items():
+                try:
+                    vf = float(v)
+                    formatted_vars[k] = int(vf) if vf == int(vf) else round(vf, 4)
+                except:
+                    formatted_vars[k] = v
+
+            substituted_rhs = cleaned_rhs
+            display_sub = cleaned_rhs
+
+            for var in sorted(formatted_vars.keys(), key=len, reverse=True):
+                substituted_rhs = re.sub(rf"\b{var}\b", str(resolved_vars[var]), substituted_rhs) # for sympify
+                display_sub = re.sub(rf"\b{var}\b", str(formatted_vars[var]), display_sub)       # for visual
+                
+            # Expand things like 10**2 to (10 × 10)
+            display_sub = re.sub(r'\(?(\d+(?:\.\d+)?)\)?\*\*2', r'(\1 × \1)', display_sub)
+            display_sub = display_sub.replace("**", "^").replace("*", " × ")
+            
             steps_output.append(f"Substitution: {lhs} = {display_sub}")
+            
             try:
                 result_value = float(sympify(substituted_rhs))
                 resolved_vars[lhs] = result_value
-                steps_output.append(f"Result: {lhs} = {round(result_value, 4)}")
+                res_display = int(result_value) if result_value == int(result_value) else round(result_value, 4)
+                steps_output.append(f"Result: {lhs} = {res_display}")
+                
+                # Auto-calculate square root if LHS is a squared variable (e.g. v²)
+                base_var = None
+                if lhs.endswith('²'):
+                    base_var = lhs[:-1].strip()
+                elif lhs.endswith('^2'):
+                    base_var = lhs[:-2].strip()
+                
+                if base_var and result_value >= 0:
+                    import math
+                    sqrt_val = math.sqrt(result_value)
+                    resolved_vars[base_var] = sqrt_val
+                    sqrt_display = int(sqrt_val) if sqrt_val == int(sqrt_val) else round(sqrt_val, 4)
+                    steps_output.append(f"Result (Square Root): {base_var} = {sqrt_display}")
+                    last_lhs = base_var
+                    
             except Exception as e:
-                steps_output.append(f"Error: {str(e)}")
+                steps_output.append(f"Error: Unable to calculate. Please check if formula uses correctly separated variables (e.g., 'u * t' instead of 'ut'). Developer detail: {str(e)}")
                 break
 
-        final_val = resolved_vars.get(last_lhs, "Error")
-        return jsonify({"steps": steps_output, "result": f"Final Answer: {final_val} {unit}"})
+        # Rebuild formatted_vars for the final output
+        final_formatted_vars = {}
+        for k, v in resolved_vars.items():
+            if isinstance(v, float):
+                final_formatted_vars[k] = int(v) if v == int(v) else round(v, 4)
+            else:
+                final_formatted_vars[k] = v
+
+        unit_str = topic.get("unit", "")
+        
+        # If the user used {var} placeholders in the Unit field, format it directly!
+        if "{" in unit_str and "}" in unit_str:
+            try:
+                final_res_string = unit_str.format(**final_formatted_vars)
+                return jsonify({"steps": steps_output, "result": final_res_string})
+            except Exception:
+                pass
+
+        # Fallback to standard standard output
+        res_val = resolved_vars.get(last_lhs, "Error")
+        if isinstance(res_val, float):
+             res_val = int(res_val) if res_val == int(res_val) else round(res_val, 4)
+             
+        return jsonify({"steps": steps_output, "result": f"Final Answer: {res_val} {unit_str}"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -242,4 +314,4 @@ def admin_upload_image():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
