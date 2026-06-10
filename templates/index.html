@@ -1128,49 +1128,293 @@
             display: block;
         }
 
-        /* ── Welcome screen ── */
+        /* ── Welcome screen (Icon-Centric Portal Redesign) ── */
         .welcome-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 70%;
+            min-height: calc(100vh - var(--navbar-height) - var(--footer-height) - 40px);
+            padding: 30px 24px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fbf9 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(124, 179, 66, 0.2);
+            margin: 10px 0;
+            gap: 32px;
+        }
+
+        .intro-header-centered {
             text-align: center;
-            color: #6aaa6a;
-            padding: 40px 20px;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
-        .welcome-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: .3;
-            animation: pulse-icon 2s ease-in-out infinite;
+        .intro-badge {
+            background: linear-gradient(90deg, #e8f5e9, #c8e6c9);
+            color: #0a5a0a;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(10, 90, 10, 0.15);
+            box-shadow: 0 2px 8px rgba(10, 90, 10, 0.05);
         }
 
-        @keyframes pulse-icon {
-
-            0%,
-            100% {
-                transform: scale(1)
-            }
-
-            50% {
-                transform: scale(1.08)
-            }
-        }
-
-        .welcome-screen h2 {
-            font-size: 26px;
+        .intro-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 40px;
             font-weight: 800;
             color: #1a3a1a;
-            margin-bottom: 10px;
+            line-height: 1.2;
+            margin: 0;
+            background: linear-gradient(135deg, #1a3a1a 0%, #0a5a0a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .welcome-screen p {
+        .intro-subtitle {
+            font-family: 'Inter', sans-serif;
             font-size: 15px;
-            color: #777;
-            max-width: 380px;
-            line-height: 1.6;
+            color: #666666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .intro-content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+            max-width: 1050px;
+            align-items: center;
+        }
+
+        /* 2x2 Grid of Educational Cards */
+        .intro-grid-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .edu-card {
+            background: #ffffff;
+            border: 1px solid rgba(124, 179, 66, 0.15);
+            border-radius: 16px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            cursor: pointer;
+        }
+
+        .edu-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(124, 179, 66, 0.4);
+            box-shadow: 0 12px 24px rgba(10, 90, 10, 0.08);
+        }
+
+        .edu-icon-wrapper {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .edu-card:hover .edu-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Themes for Cards */
+        .card-physics .edu-icon-wrapper {
+            background: #e1f5fe;
+            color: #0288d1;
+            box-shadow: 0 4px 10px rgba(2, 136, 209, 0.15);
+        }
+        .card-chemistry .edu-icon-wrapper {
+            background: #e0f2f1;
+            color: #00897b;
+            box-shadow: 0 4px 10px rgba(0, 137, 123, 0.15);
+        }
+        .card-derivations .edu-icon-wrapper {
+            background: #f3e5f5;
+            color: #8e24aa;
+            box-shadow: 0 4px 10px rgba(142, 36, 170, 0.15);
+        }
+        .card-theorems .edu-icon-wrapper {
+            background: #fff3e0;
+            color: #ff8f00;
+            box-shadow: 0 4px 10px rgba(255, 143, 0, 0.15);
+        }
+
+        .edu-card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a3a1a;
+            margin: 0 0 6px 0;
+        }
+
+        .edu-card p {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #777777;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Glassmorphic Preview Image Container */
+        .intro-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .intro-preview-card {
+            background: #ffffff;
+            border: 1px solid rgba(124, 179, 66, 0.25);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 15px 35px rgba(10, 90, 10, 0.08);
+            width: 100%;
+            max-width: 440px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-preview-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 45px rgba(10, 90, 10, 0.12);
+            border-color: rgba(124, 179, 66, 0.4);
+        }
+
+        .intro-preview-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Responsive */
+        @media (max-width: 1050px) {
+            .intro-title {
+                font-size: 34px;
+            }
+            .intro-content-layout {
+                gap: 24px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1050px) {
+            .intro-title {
+                font-size: 34px;
+            }
+            .intro-content-layout {
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .welcome-screen {
+                padding: 12px 10px;
+                gap: 12px;
+                justify-content: flex-start; /* Align content to top to prevent cut off */
+                min-height: auto; /* Allow auto height to fit exactly */
+            }
+
+            .intro-header-centered {
+                gap: 4px;
+            }
+
+            .intro-badge {
+                padding: 4px 10px;
+                font-size: 11px;
+                margin-bottom: 0px;
+            }
+
+            .intro-title {
+                font-size: 22px;
+            }
+
+            .intro-subtitle {
+                font-size: 12px;
+            }
+
+            .intro-content-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .intro-image-container {
+                order: -1; /* Display image first at the top */
+                width: 100%;
+                margin-bottom: 0px;
+            }
+
+            .intro-preview-card {
+                margin: 0 auto;
+                max-width: 220px; /* Highly compact to fit without scroll */
+                padding: 6px;
+                box-shadow: 0 4px 16px rgba(10, 90, 10, 0.05);
+                border-radius: 12px;
+            }
+
+            .intro-preview-card img {
+                border-radius: 8px;
+            }
+
+            .intro-grid-cards {
+                grid-template-columns: 1fr 1fr !important; /* Keep cards 2x2 grid */
+                gap: 8px;
+                width: 100%;
+            }
+
+            .edu-card {
+                padding: 10px 6px;
+                border-radius: 10px;
+            }
+
+            .edu-icon-wrapper {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+
+            .edu-card h3 {
+                font-size: 12px;
+                margin: 0;
+            }
+
+            .edu-card p {
+                display: none !important; /* Hide description on mobile to fit screen completely without scrolling */
+            }
         }
 
         /* ── Topic title ── */
@@ -1841,9 +2085,52 @@
         <main class="main-content">
             <!-- Welcome screen -->
             <div id="welcome-screen" class="welcome-screen">
-                <div class="welcome-icon"><i class="fas fa-atom"></i></div>
-                <h2>Select a Topic</h2>
-                <p>Choose any concept from the sidebar to view the full solution with step-by-step derivations.</p>
+                <div class="intro-header-centered">
+                    <div class="intro-badge">
+                        <i class="fas fa-graduation-cap"></i> Deep Dive
+                    </div>
+                    <h1 class="intro-title">Problems and Theorems</h1>
+                    <p class="intro-subtitle">
+                        Select a topic from the sidebar to explore interactive physics and chemistry derivations.
+                    </p>
+                </div>
+                <div class="intro-content-layout">
+                    <div class="intro-grid-cards">
+                        <div class="edu-card card-physics">
+                            <div class="edu-icon-wrapper">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <h3>Physics</h3>
+                            <p>Interact with physical laws, equations, and simulations.</p>
+                        </div>
+                        <div class="edu-card card-chemistry">
+                            <div class="edu-icon-wrapper">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h3>Chemistry</h3>
+                            <p>Understand chemical properties, reactions, and constants.</p>
+                        </div>
+                        <div class="edu-card card-derivations">
+                            <div class="edu-icon-wrapper">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h3>Derivations</h3>
+                            <p>Follow rigorous logical steps from first principles.</p>
+                        </div>
+                        <div class="edu-card card-theorems">
+                            <div class="edu-icon-wrapper">
+                                <i class="fas fa-square-root-variable"></i>
+                            </div>
+                            <h3>Formulas</h3>
+                            <p>Master central theorems, equations, and observations.</p>
+                        </div>
+                    </div>
+                    <div class="intro-image-container">
+                        <div class="intro-preview-card">
+                            <img src="{{ url_for('static', filename='derivation intro.png') }}" alt="Deep Dive Intro Page" />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Topic View -->
