@@ -1734,7 +1734,21 @@
             justify-content: flex-end;
         }
 
+        /* Show mobile-only solution on mobile, hide on desktop */
+        .mobile-only-solution-wrapper {
+            display: none;
+        }
+
         @media (max-width: 900px) {
+            .mobile-only-solution-wrapper {
+                display: block !important;
+                border-bottom: 1px solid #7cb342;
+            }
+
+            .topic-layout-right-sol {
+                display: none !important;
+            }
+
             .topic-top-row {
                 flex-direction: column;
                 gap: 15px;
@@ -1751,8 +1765,7 @@
                 gap: 16px;
             }
 
-            .topic-layout-left,
-            .topic-layout-right-sol {
+            .topic-layout-left {
                 flex: none;
                 width: 100%;
             }
@@ -2336,16 +2349,34 @@
 
                         // Render left-hand side cards (excl solution + question)
                         let leftHTML = '';
+                        let solutionInserted = false;
+                        const solutionSection = sections.find(s => s.title.toLowerCase().includes('solution') || s.title.toLowerCase().includes('step-by-step'));
+
                         sections.forEach(s => {
                             const tLower = s.title.toLowerCase();
                             if (!tLower.includes('solution') && !tLower.includes('step-by-step') && !tLower.includes('question')) {
                                 leftHTML += renderTextbookContent("## " + s.title + "\n" + s.lines.join('\n'));
+                                
+                                // Insert mobile solution below Core Concepts
+                                if (tLower.includes('core concepts') && solutionSection) {
+                                    leftHTML += `<div class="mobile-only-solution-wrapper">`;
+                                    leftHTML += renderTextbookContent("## " + solutionSection.title + "\n" + solutionSection.lines.join('\n'));
+                                    leftHTML += `</div>`;
+                                    solutionInserted = true;
+                                }
                             }
                         });
+
+                        // Fallback: if solution wasn't inserted (e.g. no Core Concepts section), append it to the end of left content on mobile
+                        if (!solutionInserted && solutionSection) {
+                            leftHTML += `<div class="mobile-only-solution-wrapper">`;
+                            leftHTML += renderTextbookContent("## " + solutionSection.title + "\n" + solutionSection.lines.join('\n'));
+                            leftHTML += `</div>`;
+                        }
+
                         leftContent.innerHTML = leftHTML;
 
                         // Render right-hand side step-by-step steps
-                        const solutionSection = sections.find(s => s.title.toLowerCase().includes('solution') || s.title.toLowerCase().includes('step-by-step'));
                         if (solutionSection) {
                             const stepCardsHTML = renderTextbookContent(solutionSection.lines.join('\n'));
                             rightContent.innerHTML = stepCardsHTML;
@@ -2502,6 +2533,8 @@
                 'final answer': '<i class="fas fa-check-circle" style="color: #38a169;"></i>',
                 'key insight': '<i class="fas fa-lightbulb" style="color: #ecc94b;"></i>',
                 'units check': '<i class="fas fa-ruler-combined" style="color: #3182ce;"></i>',
+                'solution': '<i class="fas fa-pencil-alt" style="color: #3182ce;"></i>',
+                'step-by-step': '<i class="fas fa-pencil-alt" style="color: #3182ce;"></i>',
             };
 
             const lines = raw.split('\n');
