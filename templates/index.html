@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padmasini Lab | Advanced Derivations</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <!-- marked.js for markdown -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <style>
+        :root {
+            --navbar-height: 70px;
+            /* Fixed Header Height */
+            --footer-height: 45px;
+            /* Fixed Footer Height */
+        }
+
+        /* Prevent body scroll to let internal containers handle scrolling */
+        body {
+            margin: 0;
+            overflow: hidden !important;
+        }
+
+        .step-text,
+        .topic-header p,
+        .math-row,
+        .math-result {
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 19px;
+            line-height: 1.6
+        }
+
+        #statement,
+        #theoremStatement,
+        #neetTips,
+        #givenData,
+        #assumptions {
+            white-space: pre-wrap;
+            margin-bottom: 15px;
+            color: #000
+        }
+
+        .step-text {
+            font-style: italic;
+            color: #1a1a1a;
+            margin-bottom: 10px
+        }
+
+        .math-row {
+            color: #0a5a0a;
+            font-weight: bold;
+            margin-bottom: 5px
+        }
+
+        .math-result {
+            font-weight: 800;
+            border-radius: 8px;
+            color: #fff;
+            background: #0a5a0a;
+            padding: 15px;
+            margin-top: 10px
+        }
+
+        /* ═══ HEADER, FOOTER & LAYOUT FIXES ═══ */
+        .navbar {
+            height: var(--navbar-height) !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0;
+            width: 100%;
+            z-index: 1050 !important;
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #daeada;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .footer {
+            height: var(--footer-height) !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0;
+            width: 100%;
+            z-index: 1050 !important;
+            background: linear-gradient(180deg, #ffffff 0%, #f0faf0 100%);
+            border-top: 1px solid #daeada;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a6a4a;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .footer .foot {
+            margin: 0;
+        }
+
+        /* Layout fits EXACTLY between Header and Footer */
+        .layout {
+            display: flex !important;
+            margin-top: var(--navbar-height) !important;
+            height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important;
+            overflow: hidden !important;
+            position: relative;
+        }
+
+        /* ═══ SIDEBAR FIXES ═══ */
+        .sidebar {
+            background-color: #ffffff !important;
+            width: 340px !important;
+            min-width: 340px !important;
+            flex-shrink: 0 !important;
+            border-right: none;
+            height: 100% !important;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        .sidebar-neet-header,
+        .search-container,
+        .sidebar-filters {
+            flex-shrink: 0;
+            background-color: #ffffff;
+        }
+
+        #sidebar-accordion {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        /* ═══ MAIN CONTENT INDEPENDENT SCROLL ═══ */
+        .main-content {
+            flex-grow: 1 !important;
+            height: 100% !important;
+            overflow-y: auto !important;
+            padding: 6px 16px 10px 16px !important;
+            box-sizing: border-box !important;
+            max-width: calc(100% - 340px);
+            background-color: #fcfdfc;
+        }
+
+        .derivation-panel {
+            padding: 0 !important;
+        }
+
+        .derivation-panel::before {
+            display: none !important;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: #f0f8f0;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #a8d5a8;
+            border-radius: 10px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--navbar-height) - var(--footer-height));
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- NEET Header Styles --- */
+        .sidebar-neet-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 15px 15px 15px !important;
+            margin-top: 0 !important;
+            border-bottom: 1px solid #daeada;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-neet-header .back-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #555;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-neet-header .neet-btn {
+            flex: 1;
+            background: #3b823e;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .lesson-container {
+            margin-bottom: 5px;
+            border-radius: 0;
+            overflow: hidden;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            box-shadow: none;
+        }
+
+        .lesson-title {
+            padding: 12px 14px;
+            background: #ffffff;
+            color: #3b823e;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: .2px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+            transition: background .2s;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .lesson-title .lt-arrow {
+            margin-left: auto;
+            font-size: 12px;
+            color: #888;
+            transition: transform .3s
+        }
+
+        .lesson-container.active .lesson-title .lt-arrow {
+            transform: rotate(180deg)
+        }
+
+        .lesson-title:hover {
+            background: #f9f9f9;
+        }
+
+        .topic-list-nested {
+            list-style: none;
+            padding: 0 6px 6px 6px;
+            margin: 0;
+            max-height: 0;
+            overflow: hidden;
+            background: #fff;
+            transition: max-height .4s ease-in-out;
+        }
+
+        .lesson-container.active .topic-list-nested {
+            max-height: 3000px;
+        }
+
+        .topic-list-nested li {
+            padding: 9px 10px 9px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 8px;
+            color: #444;
+            border-left: 3px solid transparent;
+            margin-bottom: 2px
+        }
+
+        .topic-list-nested li i {
+            font-size: 12px;
+            color: #777;
+            flex-shrink: 0
+        }
+
+        .topic-list-nested li:hover {
+            background: #f0faf0;
+            color: #3b823e;
+        }
+
+        .topic-list-nested li.active {
+            background: #f5fbf5;
+            border-left: 3px solid #3b823e;
+            color: #3b823e;
+            font-weight: 700;
+        }
+
+        .topic-list-nested li.active i {
+            color: #3b823e
+        }
+
+        .sidebar .search-container {
+            padding: 0 15px 15px 15px;
+            position: relative;
+        }
+
+        .sidebar .search-container input {
+            background: #fff;
+            color: #1a3a1a;
+            border: 1.5px solid #d0e8d0;
+            box-shadow: 0 2px 6px rgba(10, 90, 10, 0.04);
+            height: 34px;
+            padding: 0 10px 0 32px;
+            font-size: 13px;
+            border-radius: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar .search-container input:focus {
+            border-color: #3b823e;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 62, 0.12)
+        }
+
+        .sidebar .search-container input::placeholder {
+            color: #7a9a7a
+        }
+
+        .sidebar .search-container i {
+            color: #3b823e;
+            position: absolute;
+            left: 26px;
+            top: 10px;
+            font-size: 14px;
+        }
+
+        #sidebar-accordion::-webkit-scrollbar {
+            width: 5px
+        }
+
+        #sidebar-accordion::-webkit-scrollbar-track {
+            background: #f0f8f0
+        }
+
+        #sidebar-accordion::-webkit-scrollbar-thumb {
+            background: linear-gradient(#a8d5a8, #6aaa6a);
+            border-radius: 10px
+        }
+
+        .observation-table-container {
+            margin-top: 25px;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .05);
+            border: 1px solid #e0e0e0
+        }
+
+        .user-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            text-align: left
+        }
+
+        .user-data-table th,
+        .user-data-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            font-size: 15px
+        }
+
+        .user-data-table tr:first-child {
+            background: #0a5a0a;
+            color: #fff;
+            font-weight: bold
+        }
+
+        .user-data-table tr:nth-child(even) {
+            background: #f9fff9
+        }
+
+        .table-caption {
+            font-weight: 800;
+            color: #0a5a0a;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase
+        }
+
+        .content-section {
+            margin-bottom: 20px
+        }
+
+        .section-tag {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px
+        }
+
+        #live-diagram-section {
+            margin: 28px 0;
+            border: 1.5px solid #c2efc2;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(10, 90, 10, .08);
+            display: none;
+            background: #fff
+        }
+
+        .diag-hdr {
+            background: #0a5a0a;
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .dtype-badge {
+            background: rgba(255, 255, 255, .2);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700
+        }
+
+        .diag-body {
+            display: grid;
+            grid-template-columns: 1fr 265px
+        }
+
+        /* ═══ MOBILE / RESPONSIVE FIXES ═══ */
+        @media(max-width:900px) {
+            .sidebar {
+                position: fixed !important;
+                left: -350px !important;
+                top: var(--navbar-height) !important;
+                height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important;
+                box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            .sidebar-overlay {
+                top: var(--navbar-height) !important;
+                height: calc(100vh - var(--navbar-height) - var(--footer-height)) !important;
+            }
+
+            .main-content {
+                max-width: 100% !important;
+                width: 100%;
+                padding: 25px 20px 35px 20px !important;
+            }
+
+            .diag-body {
+                grid-template-columns: 1fr
+            }
+
+            #diagram-canvas-wrap {
+                border-right: none;
+                border-bottom: 1px solid #e8f5e8;
+                min-height: 240px
+            }
+
+            .diag-ctrl {
+                padding: 14px 12px
+            }
+        }
+
+        @media(max-width:600px) {
+            .diag-hdr {
+                font-size: 11px;
+                padding: 10px 14px
+            }
+
+            #diagramCanvas {
+                width: 100%;
+                height: auto
+            }
+
+            #diagram-canvas-wrap {
+                padding: 12px;
+                min-height: 200px
+            }
+
+            .diag-result {
+                padding: 10px 14px;
+                font-size: 14px
+            }
+
+            .res-chip {
+                font-size: 12px;
+                padding: 4px 10px
+            }
+
+            #diag-steps {
+                padding: 12px 14px
+            }
+        }
+
+        #diagram-canvas-wrap {
+            padding: 20px;
+            background: #f9fff9;
+            border-right: 1px solid #e8f5e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px
+        }
+
+        #diagramCanvas {
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+            max-width: 100%;
+            height: auto
+        }
+
+        .diag-ctrl {
+            padding: 20px 18px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        .ctrl-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            border-bottom: 2px solid #daf5da;
+            padding-bottom: 8px;
+            margin-bottom: 2px
+        }
+
+        .ctrl-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px
+        }
+
+        .ctrl-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2a4a2a
+        }
+
+        .ctrl-group input[type=range] {
+            width: 100%;
+            accent-color: #0a5a0a;
+            cursor: pointer
+        }
+
+        .ctrl-group input[type=number] {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1.5px solid #c2efc2;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: "Times New Roman", serif;
+            color: #0a5a0a;
+            font-weight: 700;
+            outline: none;
+            transition: .2s;
+            box-sizing: border-box
+        }
+
+        .ctrl-group input[type=number]:focus {
+            border-color: #0a5a0a
+        }
+
+        .ctrl-val {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0a5a0a;
+            font-family: "Times New Roman", serif;
+            text-align: center;
+            background: #f1f9f1;
+            border-radius: 8px;
+            padding: 5px
+        }
+
+        .diag-result {
+            border-top: 1px solid #e8f5e8;
+            padding: 14px 20px;
+            background: #f9fff9;
+            font-family: "Times New Roman", serif;
+            font-size: 16px
+        }
+
+        .res-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .res-chip {
+            background: #0a5a0a;
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: "Times New Roman", serif
+        }
+
+        .res-chip.sec {
+            background: #e8f5e8;
+            color: #0a5a0a;
+            border: 1px solid #c2efc2
+        }
+
+        #diag-steps {
+            background: #fff;
+            border-top: 1px solid #e8f5e8;
+            padding: 18px 20px
+        }
+
+        .dstep {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 12px;
+            align-items: flex-start
+        }
+
+        .dstep-n {
+            background: #0a5a0a;
+            color: #fff;
+            min-width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .dstep-t {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1a1a1a;
+            font-style: italic
+        }
+
+        .dstep-m {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #0a5a0a;
+            font-weight: 700
+        }
+
+        .topic-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin: 6px 0 18px
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px
+        }
+
+        .badge-class {
+            background: #e8f0fe;
+            color: #1a5ccf
+        }
+
+        .badge-subject {
+            background: #e6f4ea;
+            color: #1e6e35
+        }
+
+        .badge-imp {
+            background: #fff3e0;
+            color: #bf6000
+        }
+
+        .badge-diff {
+            background: #fce4ec;
+            color: #c62828
+        }
+
+        .badge-type {
+            background: #f3e5f5;
+            color: #6a1b9a
+        }
+
+        .info-card {
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid transparent
+        }
+
+        .given-card {
+            background: #eef4ff;
+            border-left-color: #1565C0
+        }
+
+        .assumptions-card {
+            background: #fff8f0;
+            border-left-color: #e67e22
+        }
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 6px
+        }
+
+        .info-card p {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #1a1a1a;
+            white-space: pre-wrap
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #f0fff0, #e8f5e8);
+            border: 2px solid #c2efc2;
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            text-align: center
+        }
+
+        .formula-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 8px
+        }
+
+        .formula-expr {
+            font-family: "Times New Roman", serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: #0a5a0a;
+            margin: 4px 0
+        }
+
+        .formula-unit {
+            display: inline-block;
+            margin-top: 8px;
+            background: #0a5a0a;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 14px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .section-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: linear-gradient(90deg, #e8f5e8, #f5fbf5);
+            border-radius: 10px;
+            border-left: 4px solid #0a5a0a;
+            margin: 28px 0 8px
+        }
+
+        .section-banner i {
+            color: #0a5a0a;
+            font-size: 14px
+        }
+
+        .section-banner span {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .6px
+        }
+
+        .calc-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 12px 14px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e4f0e4;
+            margin-bottom: 8px;
+            transition: border-color .2s, background .2s
+        }
+
+        .calc-step:hover {
+            border-color: #0a5a0a44;
+            background: #f9fff9
+        }
+
+        .calc-step-num {
+            background: linear-gradient(135deg, #0a5a0a, #147a14);
+            color: #fff;
+            min-width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px
+        }
+
+        .calc-step-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a3a1a;
+            margin-bottom: 3px
+        }
+
+        .calc-step-formula {
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+            color: #0a5a0a;
+            font-style: italic
+        }
+
+        .sidebar-filters {
+            padding: 0 15px 14px 15px;
+            margin-bottom: 0;
+            border-bottom: 1px solid #daeada
+        }
+
+        .filter-section-lbl {
+            font-size: 9px;
+            font-weight: 800;
+            color: #6aaa6a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block
+        }
+
+        .seg-ctrl {
+            display: flex;
+            background: #e6f4e6;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+            margin-bottom: 12px
+        }
+
+        .seg-btn {
+            flex: 1;
+            padding: 6px 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #3a6a3a;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            text-align: center;
+            white-space: nowrap
+        }
+
+        .seg-btn:hover {
+            background: rgba(10, 90, 10, .1)
+        }
+
+        .seg-btn.active {
+            background: #0a5a0a;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(10, 90, 10, .3)
+        }
+
+        .subj-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px
+        }
+
+        .subj-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 4px 6px;
+            border-radius: 10px;
+            border: 1.5px solid #d0e8d0;
+            background: #fff;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 9px;
+            font-weight: 700;
+            color: #3a6a3a;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: .3px
+        }
+
+        .subj-icon {
+            font-size: 17px;
+            line-height: 1
+        }
+
+        .subj-card:hover {
+            border-color: #3b823e;
+            background: #f0faf0;
+            transform: translateY(-1px)
+        }
+
+        .subj-card.active {
+            background: linear-gradient(135deg, #0a5a0a, #147a14);
+            color: #fff;
+            border-color: #0a5a0a;
+            box-shadow: 0 3px 10px rgba(10, 90, 10, .25)
+        }
+
+        .lt-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            opacity: 1;
+            white-space: nowrap
+        }
+
+        .lt-badge-std {
+            background: #e8f0fe;
+            color: #1a5ccf
+        }
+
+        .lt-badge-subj {
+            background: #e6f4ea;
+            color: #1e6e35;
+        }
+
+        /* ═══ INLINE STYLES CONSOLIDATED TO CSS ═══ */
+        #lesson-label {
+            color: var(--pad-green);
+            font-weight: bold;
+        }
+
+        #topic-meta-bar.hidden-display {
+            display: none;
+        }
+
+        #theorem-container {
+            display: none;
+        }
+
+        #given-container {
+            display: none;
+        }
+
+        #given-container .info-card-title i {
+            color: #1565C0;
+        }
+
+        #given-container .info-card-title span {
+            color: #1565C0;
+        }
+
+        #assumptions-container {
+            display: none;
+        }
+
+        #assumptions-container .info-card-title i {
+            color: #e67e22;
+        }
+
+        #assumptions-container .info-card-title span {
+            color: #e67e22;
+        }
+
+        #expression-container {
+            display: none;
+        }
+
+        #neet-container {
+            display: none;
+        }
+
+        #neet-container .section-tag {
+            color: #1a5b05;
+        }
+
+        #neetTips {
+            color: #090909;
+            font-weight: bold;
+        }
+
+        #derivation-header {
+            display: none;
+            margin-top: 28px;
+            margin-bottom: 4px;
+        }
+
+        .derivation-header-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: linear-gradient(90deg, #e8f5e8, #f5fbf5);
+            border-radius: 10px;
+            border-left: 4px solid #0a5a0a;
+        }
+
+        .derivation-header-inner i {
+            color: #0a5a0a;
+            font-size: 14px;
+        }
+
+        .derivation-header-inner span {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0a5a0a;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
+
+        #table-view-container {
+            display: none;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        #live-diagram-section {
+            margin-top: 28px;
+        }
+
+        .diag-result strong {
+            color: #0a5a0a;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        /* Dynamic visibility classes */
+        .show-flex {
+            display: flex !important;
+        }
+
+        .show-block {
+            display: block !important;
+        }
+
+        .show-inline-block {
+            display: inline-block !important;
+        }
+
+        .hidden-display {
+            display: none !important;
+        }
+
+        /* For dynamic search filtering */
+        .topic-item-hidden {
+            display: none;
+        }
+
+        .topic-item-visible {
+            display: flex;
+        }
+
+        .lesson-container-hidden {
+            display: none;
+        }
+
+        .lesson-container-visible {
+            display: block;
+        }
+
+        /* ── Welcome screen ── */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70%;
+            text-align: center;
+            color: #6aaa6a;
+            padding: 40px 20px;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: .3;
+            animation: pulse-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-icon {
+
+            0%,
+            100% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.08)
+            }
+        }
+
+        .welcome-screen h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a3a1a;
+            margin-bottom: 10px;
+        }
+
+        .welcome-screen p {
+            font-size: 15px;
+            color: #777;
+            max-width: 380px;
+            line-height: 1.6;
+        }
+
+        /* ── Topic title ── */
+        .topic-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0a5a0a;
+            margin: 4px 0 8px;
+            line-height: 1.3;
+        }
+
+        .topic-meta-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .topic-meta-wrap .topic-meta-bar {
+            margin: 0 !important;
+        }
+
+        .lesson-crumb {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #0a5a0a;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 0;
+        }
+
+        /* ── AI View Content — Textbook Style ── */
+        .ai-view-content {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #2d3748;
+        }
+
+        /* Collapsible container */
+        .tb-section-container {
+            border: none;
+            border-bottom: 1px solid #7cb342;
+            border-radius: 0;
+            padding: 16px;
+            background: #ffffff;
+            box-shadow: none;
+            margin-bottom: 0;
+        }
+
+        .tb-section-container:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .tb-section-content {
+            transition: all 0.3s ease;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: #000;
+        }
+
+        .tb-section-content.collapsed {
+            display: none !important;
+        }
+
+        /* Section banner — textbook mockup style */
+        .tb-section-banner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            margin-bottom: 8px;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .tb-section-banner .tb-section-icon {
+            font-size: 14px;
+        }
+
+        .tb-section-banner .tb-section-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Section body text */
+        .tb-section-body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #2d3748;
+            margin-bottom: 3px;
+        }
+
+        .tb-section-body p {
+            margin: 0 0 6px;
+        }
+
+        /* Step block — beautiful white card with light blue top header */
+        .tb-step {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tb-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .tb-step-title {
+            background-color: #ebf8ff;
+            /* Beautiful light blue banner */
+            border-bottom: 1px solid #bee3f8;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #2b6cb0;
+            font-family: 'Inter', sans-serif;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tb-step-body {
+            padding: 10px 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #2d3748;
+        }
+
+        .tb-step-body p {
+            margin: 0 0 6px;
+        }
+
+        /* Style display formulas inside steps as beautiful light blue final results boxes */
+        .tb-step-body .katex-display {
+            background-color: #f0f7ff;
+            /* Light blue bubble */
+            border: 1.5px solid #c2dff5;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 12px auto;
+            width: fit-content !important;
+            max-width: 100%;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Final answer box — light green theme matching mockup exactly */
+        .tb-final-box {
+            background-color: #f0fff4;
+            /* Light green transparent background */
+            border: 1px solid #c6f6d5;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            color: #22543d;
+        }
+
+        .tb-final-box p {
+            margin: 0 0 6px;
+            color: #22543d;
+        }
+
+        .tb-final-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .tb-final-box .katex-display {
+            background-color: #ffffff;
+            border: 1.5px solid #c6f6d5;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 12px auto;
+            width: fit-content !important;
+            max-width: 100%;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Key Insight box — light yellow warm replica style */
+        .tb-insight-box {
+            background-color: #fffaf0;
+            /* Light yellow warm background */
+            border: 1px solid #feebc8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            color: #744210;
+        }
+
+        .tb-insight-box p {
+            margin: 0 0 6px;
+        }
+
+        .tb-insight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* KaTeX display math */
+        .ai-view-content .katex-display {
+            background-color: #f4fbf4;
+            /* Light green bubble by default for concepts */
+            border: 1.5px solid #d0e8d0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 12px auto;
+            width: fit-content !important;
+            max-width: 100%;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Inline code */
+        .ai-view-content code {
+            background: #f4faf4;
+            border: 1px solid #c8e6c8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            color: #0a5a0a;
+        }
+
+        /* ── SVG Diagram Section ── */
+        .ai-svg-section {
+            margin: 28px 0 18px;
+            border: 1.5px solid #c2efc2;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(10, 90, 10, .07);
+            background: #fff;
+        }
+
+        .ai-svg-header {
+            background: #0a5a0a;
+            color: #fff;
+            padding: 11px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ai-svg-body {
+            padding: 20px;
+            background: #f9fff9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .ai-svg-body svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .ai-svg-loading {
+            color: #6aaa6a;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-svg-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .ai-svg-error {
+            color: #c0392b;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+
+        /* Side-by-side Split-Screen Replica Row */
+        .topic-layout-row {
+            display: flex;
+            gap: 16px;
+            align-items: stretch;
+            /* Keep both left and right cards the same height */
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .topic-layout-left {
+            flex: 1.1;
+            /* Slightly wider left column for concepts */
+            min-width: 0;
+            display: flex;
+        }
+
+        .topic-layout-right-sol {
+            flex: 0.9;
+            /* Slightly narrower right column for solution steps */
+            min-width: 0;
+            display: flex;
+        }
+
+        .tb-left-card {
+            border: 1px solid #7cb342 !important;
+            border-radius: 8px !important;
+            background: #ffffff !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 0 !important;
+            overflow: hidden;
+        }
+
+        .tb-right-card {
+            border: 1px solid #7cb342 !important;
+            border-radius: 8px !important;
+            background: #ffffff !important;
+            box-shadow: none !important;
+            padding: 16px !important;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 12px !important;
+        }
+
+
+        /* Question + Diagram Top Row inside Left Card */
+        .tb-question-diagram-row {
+            display: flex;
+            gap: 0;
+            border: none;
+            border-bottom: 1px solid #7cb342;
+            border-radius: 0;
+            padding: 0;
+            background: #ffffff;
+            margin-bottom: 0;
+            width: 100%;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+
+        .tb-question-box {
+            flex: 1;
+            min-width: 0;
+            padding: 16px;
+            border-right: 1px solid #7cb342;
+        }
+
+        .tb-diagram-box {
+            flex-shrink: 0;
+            width: 250px;
+            display: none;
+            /* Managed by javascript */
+            padding: 16px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        /* Section Header Styling */
+        .tb-section-header {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #0a5a0a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 8px;
+        }
+
+        .tb-question-text {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        /* Beautiful Centered Display Math inside Question Box */
+        .tb-question-text .katex-display {
+            background-color: #e8f5e9;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            margin: 12px auto;
+            width: fit-content !important;
+            max-width: 100%;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Right Column Step Boxes */
+        .step-box {
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            background: #ffffff;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .step-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-box .step-num {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 10px 14px;
+            border-bottom: 1px solid #90caf9;
+        }
+
+        .step-box .step-text {
+            padding: 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        /* Inside the step-text, the final math formula is in a bordered blue box */
+        .step-box .step-text .katex-display {
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 10px 16px;
+            background-color: #f8fbff;
+            width: fit-content !important;
+            margin: 12px auto;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Manual image upload section (borderless for layout replica) */
+        .ai-manual-image-section {
+            margin: 0;
+            border: none;
+            background: transparent;
+            width: 220px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .ai-manual-image-header {
+            padding: 0 0 4px 0;
+            display: block;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: #0a5a0a;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            background: transparent;
+            border-bottom: none;
+        }
+
+        .ai-manual-image-header span {
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .ai-manual-image-body {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-manual-image-body img {
+            width: 170px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .ai-manual-image-caption {
+            color: #666;
+            font-size: 10px;
+            margin-top: 4px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+
+        .ai-manual-image-body .no-image-hint {
+            color: #aaa;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        /* Side-by-side Top Row (Question + Diagram) */
+        .topic-top-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .topic-question-col {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topic-diagram-col {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 900px) {
+            .topic-top-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .topic-diagram-col {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            /* Stack the two-column layout vertically on mobile */
+            .topic-layout-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .topic-layout-left,
+            .topic-layout-right-sol {
+                flex: none;
+                width: 100%;
+            }
+
+            /* Stack question and diagram vertically on mobile */
+            .tb-question-diagram-row {
+                flex-direction: column;
+            }
+
+            .tb-question-box {
+                border-right: none;
+                border-bottom: 1px solid #7cb342;
+            }
+
+            .tb-diagram-box {
+                width: 100%;
+            }
+        }
+
+        /* Ensure KaTeX display math scrolls horizontally on small screens instead of overflowing/hiding */
+        .katex-display {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+        }
+
+        /* Final answer highlight — legacy */
+        .ai-final-answer {
+            background: linear-gradient(135deg, #0a5a0a, #147a14);
+            color: #fff;
+            border-radius: 14px;
+            padding: 18px 24px;
+            margin: 20px 0 10px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 18px rgba(10, 90, 10, .18);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo"><img src="{{ url_for('static', filename='logo.png') }}" alt="Padmasini Logo"></div>
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" title="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-neet-header">
+                <button class="back-btn" onclick="handleBackButtonClick();" title="Go back"><i
+                        class="fas fa-arrow-left"></i></button>
+                <div class="neet-btn">NEET</div>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBar" placeholder="Search concept..." onkeyup="filterTopics()">
+            </div>
+
+            <div class="sidebar-filters">
+                <span class="filter-section-lbl">Standard</span>
+                <div class="seg-ctrl" id="std-pills"></div>
+                <span class="filter-section-lbl">Subject</span>
+                <div class="subj-grid" id="subj-pills"></div>
+            </div>
+
+            <div id="sidebar-accordion"></div>
+        </aside>
+
+        <main class="main-content">
+            <!-- Welcome screen -->
+            <div id="welcome-screen" class="welcome-screen">
+                <div class="welcome-icon"><i class="fas fa-atom"></i></div>
+                <h2>Select a Topic</h2>
+                <p>Choose any concept from the sidebar to view the full solution with step-by-step derivations.</p>
+            </div>
+
+            <!-- Topic View -->
+            <section class="derivation-panel hidden-init" id="derivation-view">
+                <!-- Meta -->
+                <div class="topic-meta-wrap">
+                    <small id="lesson-label" class="lesson-crumb"></small>
+                    <div id="topic-meta-bar" class="topic-meta-bar hidden-display"></div>
+                </div>
+
+                <!-- Two-Column Stacked Layout to eliminate empty spacing completely -->
+                <div class="topic-layout-row">
+                    <!-- Left column: stacks Question and Solution blocks perfectly tight inside single card -->
+                    <div class="topic-layout-left">
+                        <div class="tb-left-card">
+
+                            <!-- Question + Diagram Top Row -->
+                            <div class="tb-question-diagram-row">
+                                <div class="tb-question-box">
+                                    <div class="tb-section-header">
+                                        <i class="fas fa-question-circle tb-question-icon"></i>
+                                        <span>QUESTION</span>
+                                    </div>
+                                    <div id="title-question-text" class="tb-question-text"></div>
+                                </div>
+                                <div class="tb-diagram-box" id="topic-layout-right">
+                                    <!-- Manual Image (optional supplement) -->
+                                    <div class="ai-manual-image-section hidden-init" id="ai-manual-image-section">
+                                        <div class="ai-manual-image-header">
+                                            <span>FREE BODY DIAGRAM</span>
+                                        </div>
+                                        <div class="ai-manual-image-body">
+                                            <img id="ai-topic-image" src="" alt="Uploaded Diagram">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Left Content (Understanding, Core Concepts, Final Answer, Key Insight) -->
+                            <div id="ai-left-content" class="ai-view-content"></div>
+
+                            <!-- Manual content block (shown for manually entered topics fallback) -->
+                            <div id="manual-content-block" class="hidden-init">
+                                <div id="theorem-container" class="content-section">
+                                    <p id="theoremStatement"></p>
+                                </div>
+                                <div id="statement-container" class="content-section">
+                                    <p id="statement">Select a topic from the sidebar to view the conceptual derivation.
+                                    </p>
+                                </div>
+                                <div id="given-container" class="info-card given-card">
+                                    <div class="info-card-title"><i class="fas fa-clipboard-list"></i><span>Given
+                                            Data</span></div>
+                                    <p id="givenData"></p>
+                                </div>
+                                <div id="assumptions-container" class="info-card assumptions-card">
+                                    <div class="info-card-title"><i
+                                            class="fas fa-check-circle"></i><span>Assumptions</span></div>
+                                    <p id="assumptions"></p>
+                                </div>
+                                <div id="expression-container" class="formula-box">
+                                    <div class="formula-title"><i class="fas fa-square-root-variable"></i> Key Formula
+                                    </div>
+                                    <div id="expression-text" class="formula-expr"></div>
+                                    <span id="unit-display" class="formula-unit"></span>
+                                </div>
+                                <div id="neet-container" class="content-section">
+                                    <span class="section-tag"><i class="fas fa-lightbulb"></i> NEET TIPS</span>
+                                    <p id="neetTips"></p>
+                                </div>
+                                <div id="derivation-header">
+                                    <div class="derivation-header-inner">
+                                        <i class="fas fa-list-ol"></i><span>Derivation Steps</span>
+                                    </div>
+                                </div>
+                                <div id="derivation-content"></div>
+                                <div id="table-view-container">
+                                    <span class="table-caption"><i class="fas fa-table"></i> Observation Data /
+                                        Reference Table</span>
+                                    <div class="observation-table-container" id="observation-table"></div>
+                                </div>
+                                <div id="live-diagram-section">
+                                    <div class="diag-hdr">
+                                        <span><i class="fas fa-drafting-compass"></i>&nbsp; Interactive Diagram</span>
+                                        <span class="dtype-badge" id="diag-type-badge">—</span>
+                                    </div>
+                                    <div class="diag-body">
+                                        <div id="diagram-canvas-wrap">
+                                            <canvas id="diagramCanvas" width="460" height="300"></canvas>
+                                        </div>
+                                        <div class="diag-ctrl">
+                                            <div class="ctrl-title"><i class="fas fa-sliders-h"></i> Adjust Values</div>
+                                            <div id="diag-ctrl-inputs"></div>
+                                        </div>
+                                    </div>
+                                    <div class="diag-result">
+                                        <strong>Live Results</strong>
+                                        <div class="res-row" id="diag-res-row"></div>
+                                    </div>
+                                    <div id="diag-steps"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Stacks Step-by-Step Solution steps perfectly tight inside single card -->
+                    <div class="topic-layout-right-sol" id="topic-layout-right-sol">
+                        <div class="tb-right-card">
+                            <div class="tb-section-header">
+                                <span class="tb-solution-emoji">✏️</span>
+                                <span>STEP-BY-STEP SOLUTION</span>
+                            </div>
+                            <div id="ai-right-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clear floated elements to ensure full expand container behavior -->
+                <div class="tb-clear-float"></div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p class="foot">@2026, Padmasini innovations Pvt Ltd. All rights reserved</p>
+    </footer>
+
+    <script>
+        const PI = Math.PI;
+        const toRad = d => d * PI / 180;
+        const toDeg = r => r * 180 / PI;
+
+        function handleBackButtonClick() {
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'go-back' }, '*');
+            } else {
+                const params = new URLSearchParams(window.location.search);
+                const returnUrl = params.get('returnUrl');
+                if (returnUrl) {
+                    window.location.href = returnUrl;
+                } else if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = '/';
+                }
+            }
+            if (window.innerWidth <= 900) {
+                toggleSidebar();
+            }
+        }
+
+        function cvs() { return document.getElementById('diagramCanvas'); }
+        function ctx2() { return cvs().getContext('2d'); }
+
+        function clr(c) {
+            const x = c || cvs(), g = x.getContext('2d');
+            g.clearRect(0, 0, x.width, x.height);
+            g.fillStyle = '#ffffff'; g.fillRect(0, 0, x.width, x.height);
+        }
+
+        function arrow(g, x1, y1, x2, y2, col, lw) {
+            col = col || '#0a5a0a'; lw = lw || 2;
+            const a = Math.atan2(y2 - y1, x2 - x1), h = 12;
+            g.strokeStyle = col; g.fillStyle = col; g.lineWidth = lw;
+            g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+            g.beginPath();
+            g.moveTo(x2, y2);
+            g.lineTo(x2 - h * Math.cos(a - .4), y2 - h * Math.sin(a - .4));
+            g.lineTo(x2 - h * Math.cos(a + .4), y2 - h * Math.sin(a + .4));
+            g.closePath(); g.fill();
+        }
+
+        function lbl(g, txt, x, y, col, sz, bold) {
+            g.fillStyle = col || '#111'; g.font = (bold ? 'bold ' : '') + ((sz || 15) + 'px "Times New Roman",serif');
+            g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, x, y);
+        }
+
+        function arc(g, cx, cy, r, a1, a2, col, lw) {
+            g.beginPath(); g.arc(cx, cy, r, a1, a2);
+            g.strokeStyle = col || '#0a5a0a'; g.lineWidth = lw || 1.5; g.stroke();
+        }
+
+        const D = {};
+
+        const PARAMS = {};
+
+        const DLABELS = { customImage: 'Custom Diagram' };
+
+        let cVals = {}, cType = '', cTopic = '', currentTopicData = null;
+
+        function buildControls(dtype) {
+            const el = document.getElementById('diag-ctrl-inputs');
+            el.innerHTML = ''; cVals = {};
+            let ps = (dtype === 'customImage' && currentTopicData && currentTopicData.variables) ?
+                currentTopicData.variables.map(v => ({ id: v, label: v, min: 0, max: 200, step: 0.1, def: 10 })) :
+                (PARAMS[dtype] || []);
+
+            ps.forEach(p => {
+                cVals[p.id] = p.def;
+                const d = document.createElement('div'); d.className = 'ctrl-group';
+                d.innerHTML = `<label>${p.label}</label>
+            <input type="range" id="r_${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}" oninput="onCI('${p.id}',this.value,'range')">
+            <input type="number" id="n_${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}" oninput="onCI('${p.id}',this.value,'num')">
+            <div class="ctrl-val" id="v_${p.id}">${p.def}</div>`;
+                el.appendChild(d);
+            });
+        }
+
+        function onCI(pid, raw, src) {
+            const val = parseFloat(raw); if (isNaN(val)) return;
+            cVals[pid] = val;
+            if (src !== 'range') { const r = document.getElementById('r_' + pid); if (r) r.value = val; }
+            if (src !== 'num') { const n = document.getElementById('n_' + pid); if (n) n.value = val; }
+            const vd = document.getElementById('v_' + pid); if (vd) vd.textContent = val;
+            const sideInput = document.getElementById(pid);
+            if (sideInput) sideInput.value = val;
+            redraw();
+        }
+
+        function redraw() {
+            if (!cType) return;
+            if (cType === 'customImage') {
+                const c = cvs(), g = c.getContext('2d');
+                if (currentTopicData && currentTopicData.problemImage) {
+                    const img = new Image();
+                    img.src = currentTopicData.problemImage;
+                    img.onload = () => {
+                        const wrap = document.getElementById('diagram-canvas-wrap');
+                        const availW = Math.max(wrap.clientWidth - 32, 240);
+                        const availH = Math.min(Math.round(img.height * availW / img.width), window.innerHeight * 0.55);
+                        const scale = Math.min(availW / img.width, availH / img.height);
+                        c.width = Math.round(img.width * scale);
+                        c.height = Math.round(img.height * scale);
+                        const gc = c.getContext('2d');
+                        gc.clearRect(0, 0, c.width, c.height);
+                        gc.drawImage(img, 0, 0, c.width, c.height);
+                    };
+                    img.onerror = () => { clr(c); lbl(g, 'Image failed to load', c.width / 2, c.height / 2, '#c0392b', 15, true); };
+                } else { clr(c); lbl(g, 'No Image Uploaded', c.width / 2, c.height / 2, '#c0392b', 16, true); }
+
+                if (window.calcTimeout) clearTimeout(window.calcTimeout);
+                window.calcTimeout = setTimeout(() => {
+                    fetch("/calculate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicName: cTopic, values: cVals }) })
+                        .then(r => r.json()).then(data => {
+                            let resObj = { results: [], steps: [] };
+                            if (!data.error) {
+                                if (data.result) resObj.results.push({ label: "Final", value: data.result.replace('Final Answer: ', ''), unit: '' });
+                                if (data.steps) {
+                                    let currentStep = { text: '', math: '' };
+                                    data.steps.forEach(s => {
+                                        if (s.startsWith('---')) {
+                                            if (currentStep.text || currentStep.math) resObj.steps.push({ ...currentStep });
+                                            currentStep = { text: s.replace(/---/g, '').trim(), math: '' };
+                                        } else { currentStep.math += (currentStep.math ? '<br>' : '') + s; }
+                                    });
+                                    if (currentStep.text || currentStep.math) resObj.steps.push({ ...currentStep });
+                                }
+                            } else { resObj.steps.push({ text: "Error", math: data.error }); }
+                            updateUI(resObj);
+                        });
+                }, 150);
+                autoCalculate();
+                return;
+            }
+            if (D[cType]) {
+                const res = D[cType](ctx2(), cvs(), cVals);
+                updateUI(res);
+                autoCalculate();
+            }
+        }
+
+        function updateUI(res) {
+            const row = document.getElementById('diag-res-row'); row.innerHTML = '';
+            (res.results || []).forEach(r => {
+                const s = document.createElement('span'); s.className = 'res-chip';
+                s.textContent = `${r.label}: ${r.value} ${r.unit}`; row.appendChild(s);
+            });
+            const so = document.getElementById('diag-steps');
+            if (res.steps && res.steps.length) {
+                let h = `<div style="font-size:13px;font-weight:800;color:#0a5a0a;text-transform:uppercase;margin-bottom:10px;"><i class="fas fa-list-ol"></i> Solution Steps</div>`;
+                res.steps.forEach((s, i) => {
+                    if (!s.text && !s.math) return;
+                    h += `<div class="dstep"><div class="dstep-n">${i + 1}</div><div>${s.text ? `<div class="dstep-t">${s.text}</div>` : ''}${s.math ? `<div class="dstep-m">${s.math}</div>` : ''}</div></div>`;
+                });
+                so.innerHTML = h;
+            } else { so.innerHTML = ''; }
+        }
+
+        function initDiagram(dtype) {
+            const sec = document.getElementById('live-diagram-section');
+            if (!dtype || (!D[dtype] && dtype !== 'customImage')) {
+                sec.classList.add('hidden-display');
+                sec.classList.remove('show-block');
+                cType = '';
+                return;
+            }
+            cType = dtype;
+            sec.classList.remove('hidden-display');
+            sec.classList.add('show-block');
+            document.getElementById('diag-type-badge').textContent = DLABELS[dtype] || dtype;
+            cvs().height = 300; buildControls(dtype); redraw();
+        }
+
+        /* ═══ SIDEBAR DATA + FILTER STATE ═══ */
+        let allTopics = [], activeStd = 'all', activeSubj = 'all';
+
+        function fetchTopics() {
+            fetch("/admin/getAll").then(r => r.json()).then(data => {
+                allTopics = data;
+
+                /* ── Standard: always show All / 11 / 12 + any extras from DB ── */
+                const dbStds = [...new Set(data.map(t => t.standard).filter(Boolean))].sort();
+                const allStds = [...new Set(['11', '12', ...dbStds])].sort();
+                const stdPills = document.getElementById('std-pills');
+                stdPills.innerHTML = `<button class="seg-btn active" onclick="setFilter('std','all',this)">All</button>`;
+                allStds.forEach(s => {
+                    stdPills.innerHTML += `<button class="seg-btn" onclick="setFilter('std','${s}',this)">${s}th</button>`;
+                });
+
+                /* ── Subject: always show All / Physics / Chemistry + any extras from DB ── */
+                const subjectDefs = [
+                    { name: 'Physics', icon: '⚛️' },
+                    { name: 'Chemistry', icon: '⚗️' }
+                ];
+                const dbSubjs = [...new Set(data.map(t => t.subject).filter(Boolean))];
+                /* Merge: built-in first, then any extra subjects from DB not already listed */
+                const knownNames = subjectDefs.map(s => s.name);
+                const extraSubjs = dbSubjs.filter(s => !knownNames.includes(s));
+                const allSubjDefs = [
+                    ...subjectDefs,
+                    ...extraSubjs.map(s => ({ name: s, icon: '📚' }))
+                ];
+
+                const subjPills = document.getElementById('subj-pills');
+                subjPills.innerHTML = `<button class="subj-card active" onclick="setFilter('subj','all',this)"><span class="subj-icon">🔮</span>All</button>`;
+                allSubjDefs.forEach(sd => {
+                    subjPills.innerHTML += `<button class="subj-card" onclick="setFilter('subj','${sd.name}',this)"><span class="subj-icon">${sd.icon}</span>${sd.name}</button>`;
+                });
+
+                renderSidebar();
+            });
+        }
+
+        function setFilter(type, val, btn) {
+            if (type === 'std') {
+                activeStd = val;
+                document.querySelectorAll('#std-pills .seg-btn').forEach(b => b.classList.remove('active'));
+            } else {
+                activeSubj = val;
+                document.querySelectorAll('#subj-pills .subj-card').forEach(b => b.classList.remove('active'));
+            }
+            btn.classList.add('active');
+            renderSidebar();
+        }
+
+        function renderSidebar() {
+            const acc = document.getElementById("sidebar-accordion");
+            acc.innerHTML = "";
+
+            /* Filter by active standard + subject */
+            const filtered = allTopics.filter(t => {
+                const stdOk = activeStd === 'all' || String(t.standard) === String(activeStd);
+                const subjOk = activeSubj === 'all' || t.subject === activeSubj;
+                return stdOk && subjOk;
+            });
+
+            if (!filtered.length) {
+                acc.innerHTML = '<div style="text-align:center;color:#aaa;font-size:12px;padding:24px 8px;"><i class="fas fa-inbox"></i><br>No topics for this filter</div>';
+                return;
+            }
+
+            /* Group by lessonName; store meta per group */
+            const grp = {};
+            filtered.forEach(t => {
+                const key = t.lessonName || 'General';
+                if (!grp[key]) grp[key] = { topics: [], std: t.standard || '', subj: t.subject || '' };
+                grp[key].topics.push(t);
+            });
+
+            for (const lessonName in grp) {
+                const { topics, std, subj } = grp[lessonName];
+                const cont = document.createElement('div'); cont.className = 'lesson-container';
+
+                /* Header with subject + class mini badges */
+                const td = document.createElement('div'); td.className = 'lesson-title';
+                const stdBadge = std ? `<span class="lt-badge lt-badge-std">Cl.${std}</span>` : '';
+                const subjBadge = subj ? `<span class="lt-badge lt-badge-subj">${subj}</span>` : '';
+
+                td.innerHTML = `
+                    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${lessonName}</span>
+                    ${stdBadge}${subjBadge}
+                    <i class="fas fa-minus lt-arrow"></i>`;
+
+                /* Topic list */
+                const ul = document.createElement('ul'); ul.className = 'topic-list-nested';
+                topics.forEach(t => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-caret-right"></i> ${t.topicName}`;
+                    li.onclick = () => {
+                        loadTopicById(t._id, li);
+                        // Auto-hide sidebar on mobile after clicking a topic
+                        if (window.innerWidth <= 900) {
+                            document.querySelector('.sidebar').classList.remove('active');
+                            document.getElementById('sidebarOverlay').classList.remove('active');
+                        }
+                    };
+                    ul.appendChild(li);
+                });
+                cont.appendChild(td); cont.appendChild(ul); acc.appendChild(cont);
+                td.addEventListener('click', () => cont.classList.toggle('active'));
+            }
+        }
+
+        function splitMarkdownSections(raw) {
+            const sections = [];
+            const lines = raw.split('\n');
+            let currentSection = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (/^##\s+/.test(line)) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    const title = line.replace(/^##\s+/, '').replace(/[*_`]/g, '').trim();
+                    currentSection = { title, lines: [] };
+                } else {
+                    if (currentSection) {
+                        currentSection.lines.push(line);
+                    } else if (line.trim()) {
+                        if (!sections.length) {
+                            currentSection = { title: "Introduction", lines: [line] };
+                        } else {
+                            sections[sections.length - 1].lines.push(line);
+                        }
+                    }
+                }
+            }
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+            return sections;
+        }
+
+        function loadTopicById(id, el) {
+            document.querySelectorAll('.topic-list-nested li').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+
+            // Hide welcome, show view
+            document.getElementById('welcome-screen').style.display = 'none';
+            const view = document.getElementById('derivation-view');
+            view.style.display = 'block';
+
+            fetch("/admin/getTopic", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) })
+                .then(r => r.json()).then(data => {
+                    cTopic = data.topicName; currentTopicData = data;
+
+                    /* ── Lesson label ── */
+                    document.getElementById("lesson-label").innerHTML = `<span style="display: flex; align-items: center; font-size: 16px; line-height: 1; margin-top: -2px;">📖</span><span>` + (data.lessonName || 'DERIVATION PROBLEM').toUpperCase() + `</span>`;
+
+                    /* ── Meta badges ── */
+                    const metaBar = document.getElementById("topic-meta-bar");
+                    const badges = [];
+                    if (data.standard) badges.push(`<span class="meta-badge badge-class"><i class="fas fa-graduation-cap"></i> Class ${data.standard}</span>`);
+                    if (data.subject) badges.push(`<span class="meta-badge badge-subject"><i class="fas fa-flask"></i> ${data.subject}</span>`);
+                    if (data.topicType) badges.push(`<span class="meta-badge badge-type"><i class="fas fa-tag"></i> ${data.topicType}</span>`);
+                    if (data.importance) badges.push(`<span class="meta-badge badge-imp"><i class="fas fa-star"></i> ${data.importance}</span>`);
+                    if (data.difficulty) badges.push(`<span class="meta-badge badge-diff"><i class="fas fa-signal"></i> ${data.difficulty}</span>`);
+                    metaBar.innerHTML = badges.join('');
+                    if (badges.length) { metaBar.classList.remove('hidden-display'); metaBar.classList.add('show-flex'); }
+                    else { metaBar.classList.add('hidden-display'); metaBar.classList.remove('show-flex'); }
+
+                    /* ── Title / Question ── */
+                    document.getElementById("title-question-text").innerText = data.topicName;
+
+                    /* ── Decide: AI content OR manual content ── */
+                    const manBlock = document.getElementById('manual-content-block');
+                    const leftContent = document.getElementById('ai-left-content');
+                    const rightContent = document.getElementById('ai-right-content');
+                    const rightColSol = document.getElementById('topic-layout-right-sol');
+
+                    if (data.aiContent && data.aiContent.trim().length > 10) {
+                        // ── AI path: Split textbook-style render ──
+                        manBlock.style.display = 'none';
+                        leftContent.style.display = 'block';
+
+                        // Show manual uploaded image if present
+                        const manualImgSec = document.getElementById('ai-manual-image-section');
+                        const imgEl = document.getElementById('ai-topic-image');
+                        const imgSrc = data.aiImage || data.problemImage || '';
+                        const rightCol = document.getElementById('topic-layout-right');
+                        if (imgSrc) {
+                            imgEl.src = imgSrc;
+                            manualImgSec.style.display = 'block';
+                            if (rightCol) rightCol.style.display = 'flex';
+                        } else {
+                            manualImgSec.style.display = 'none';
+                            if (rightCol) rightCol.style.display = 'none';
+                        }
+
+                        // Split sections by header
+                        const sections = splitMarkdownSections(data.aiContent);
+
+                        // Render left-hand side cards (excl solution + question)
+                        let leftHTML = '';
+                        sections.forEach(s => {
+                            const tLower = s.title.toLowerCase();
+                            if (!tLower.includes('solution') && !tLower.includes('step-by-step') && !tLower.includes('question')) {
+                                leftHTML += renderTextbookContent("## " + s.title + "\n" + s.lines.join('\n'));
+                            }
+                        });
+                        leftContent.innerHTML = leftHTML;
+
+                        // Render right-hand side step-by-step steps
+                        const solutionSection = sections.find(s => s.title.toLowerCase().includes('solution') || s.title.toLowerCase().includes('step-by-step'));
+                        if (solutionSection) {
+                            const stepCardsHTML = renderTextbookContent(solutionSection.lines.join('\n'));
+                            rightContent.innerHTML = stepCardsHTML;
+                            if (rightColSol) rightColSol.style.display = 'flex';
+                        } else {
+                            rightContent.innerHTML = '';
+                            if (rightColSol) rightColSol.style.display = 'none';
+                        }
+
+                        // Render KaTeX math
+                        setTimeout(() => {
+                            if (window.renderMathInElement) {
+                                [document.getElementById('title-question-text'), leftContent, rightContent].forEach(container => {
+                                    if (container) {
+                                        renderMathInElement(container, {
+                                            delimiters: [
+                                                { left: '$$', right: '$$', display: true },
+                                                { left: '$', right: '$', display: false },
+                                                { left: '\\[', right: '\\]', display: true },
+                                                { left: '\\(', right: '\\)', display: false }
+                                            ],
+                                            throwOnError: false
+                                        });
+                                    }
+                                });
+                            }
+                        }, 80);
+
+                    } else {
+                        // ── Manual path: existing field-by-field rendering ──
+                        leftContent.style.display = 'none';
+                        if (rightColSol) rightColSol.style.display = 'none';
+                        manBlock.style.display = 'block';
+
+                        const thm = data.theoremStatement || "";
+                        document.getElementById("theoremStatement").innerText = thm;
+                        const themContainer = document.getElementById("theorem-container");
+                        if (thm) { themContainer.classList.remove('hidden-display'); themContainer.classList.add('show-block'); }
+                        else { themContainer.classList.add('hidden-display'); themContainer.classList.remove('show-block'); }
+
+                        const stmt = data.conceptualStatement || data.statement || "";
+                        document.getElementById("statement").innerText = stmt;
+                        document.getElementById("statement-container").style.display = stmt ? "block" : "none";
+
+                        const gd = data.givenData || "";
+                        document.getElementById("givenData").innerText = gd;
+                        const givenContainer = document.getElementById("given-container");
+                        if (gd) { givenContainer.classList.remove('hidden-display'); givenContainer.classList.add('show-block'); }
+                        else { givenContainer.classList.add('hidden-display'); givenContainer.classList.remove('show-block'); }
+
+                        const assm = data.assumptions || "";
+                        document.getElementById("assumptions").innerText = assm;
+                        const assmsContainer = document.getElementById("assumptions-container");
+                        if (assm) { assmsContainer.classList.remove('hidden-display'); assmsContainer.classList.add('show-block'); }
+                        else { assmsContainer.classList.add('hidden-display'); assmsContainer.classList.remove('show-block'); }
+
+                        const expr = data.expression || "";
+                        const unit = data.unit || "";
+                        document.getElementById("expression-text").textContent = expr;
+                        const unitEl = document.getElementById("unit-display");
+                        if (unit && !unit.includes('{')) { unitEl.textContent = `Unit: ${unit}`; unitEl.classList.remove('hidden-display'); unitEl.classList.add('show-inline-block'); }
+                        else { unitEl.classList.add('hidden-display'); unitEl.classList.remove('show-inline-block'); }
+                        const exprContainer = document.getElementById("expression-container");
+                        if (expr) { exprContainer.classList.remove('hidden-display'); exprContainer.classList.add('show-block'); }
+                        else { exprContainer.classList.add('hidden-display'); exprContainer.classList.remove('show-block'); }
+
+                        const tips = data.neetTips || "";
+                        document.getElementById("neetTips").innerText = tips;
+                        const neetContainer = document.getElementById("neet-container");
+                        if (tips) { neetContainer.classList.remove('hidden-display'); neetContainer.classList.add('show-block'); }
+                        else { neetContainer.classList.add('hidden-display'); neetContainer.classList.remove('show-block'); }
+
+                        const steps = data.derivationSteps || [];
+                        let dh = "";
+                        steps.forEach((s, i) => { dh += `<div class="step-box"><div class="step-num">Step ${i + 1}: ${s.split('</p>')[0].replace(/<[^>]*>?/gm, '').split('.')[0] || 'Solution Step'}</div><div class="step-text">${s}</div></div>`; });
+                        document.getElementById("derivation-content").innerHTML = dh;
+                        const derivHeader = document.getElementById("derivation-header");
+                        if (steps.length) { derivHeader.classList.remove('hidden-display'); derivHeader.classList.add('show-block'); }
+                        else { derivHeader.classList.add('hidden-display'); derivHeader.classList.remove('show-block'); }
+
+                        const tc = document.getElementById("table-view-container");
+                        if (data.tableData && data.tableData.length > 0) {
+                            tc.classList.remove('hidden-display'); tc.classList.add('show-block');
+                            let h = `<table class="user-data-table">`;
+                            data.tableData.forEach((row, ri) => { h += `<tr>`; row.forEach(cell => { h += ri === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`; }); h += `</tr>`; });
+                            h += `</table>`; document.getElementById("observation-table").innerHTML = h;
+                        } else { tc.classList.add('hidden-display'); tc.classList.remove('show-block'); }
+
+                        initDiagram(data.diagramType || "");
+                    }
+                });
+        }
+        function autoCalculate() {
+            const vals = {};
+            document.querySelectorAll("#inputs input[type='number']").forEach(i => { if (i.value !== "") vals[i.id] = parseFloat(i.value); });
+            if (Object.keys(vals).length > 0) calculate(vals);
+        }
+
+        function calculate(values) {
+            fetch("/calculate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicName: cTopic, values }) })
+                .then(r => r.json()).then(data => {
+                    let sh = "";
+                    (data.steps || []).forEach(s => { sh += `<div class="math-row">${s}</div>`; });
+                    if (data.result) { sh += `<div class="math-result">${data.result}</div>`; }
+                });
+        }
+
+        function filterTopics() {
+            const val = document.getElementById("searchBar").value.toLowerCase();
+            document.querySelectorAll(".topic-list-nested li").forEach(li => {
+                if (li.innerText.toLowerCase().includes(val)) {
+                    li.classList.remove('topic-item-hidden');
+                    li.classList.add('topic-item-visible');
+                } else {
+                    li.classList.add('topic-item-hidden');
+                    li.classList.remove('topic-item-visible');
+                }
+            });
+            /* Hide lesson groups where all topics are hidden */
+            document.querySelectorAll(".lesson-container").forEach(cont => {
+                const anyVisible = [...cont.querySelectorAll('.topic-list-nested li')]
+                    .some(li => !li.classList.contains('topic-item-hidden'));
+                if (val) {
+                    if (anyVisible) {
+                        cont.classList.remove('lesson-container-hidden');
+                        cont.classList.add('lesson-container-visible');
+                    } else {
+                        cont.classList.add('lesson-container-hidden');
+                        cont.classList.remove('lesson-container-visible');
+                    }
+                } else {
+                    cont.classList.remove('lesson-container-hidden');
+                    cont.classList.add('lesson-container-visible');
+                }
+                if (val && anyVisible) cont.classList.add('active');
+            });
+        }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        /* ═══════════════════════════════════════════════
+           TEXTBOOK-STYLE AI CONTENT RENDERER
+           Converts markdown-like AI output into proper
+           textbook layout: section banners → content
+           lines, steps as title+body paragraphs.
+           ═══════════════════════════════════════════════ */
+        function renderTextbookContent(raw) {
+            const SECTION_ICONS = {
+                'understanding': '<i class="fas fa-search" style="color: #4a5568;"></i>',
+                'core concepts': '<i class="fas fa-book" style="color: #319795;"></i>',
+                'final answer': '<i class="fas fa-check-circle" style="color: #38a169;"></i>',
+                'key insight': '<i class="fas fa-lightbulb" style="color: #ecc94b;"></i>',
+                'units check': '<i class="fas fa-ruler-combined" style="color: #3182ce;"></i>',
+            };
+
+            const lines = raw.split('\n');
+            let html = '';
+            let i = 0;
+            let inSection = null; // 'normal' | 'steps' | 'final' | 'insight'
+            let hasOpenSection = false;
+
+            function detectSectionType(title) {
+                const t = title.toLowerCase();
+                if (t.includes('final answer')) return 'final';
+                if (t.includes('key insight') || t.includes('insight')) return 'insight';
+                if (t.includes('step-by-step') || t.includes('solution')) return 'steps';
+                return 'normal';
+            }
+
+            function getSectionIcon(title) {
+                const t = title.toLowerCase();
+                for (const [k, v] of Object.entries(SECTION_ICONS)) {
+                    if (t.includes(k)) return v;
+                }
+                return '<i class="fas fa-info-circle" style="color: #4a5568;"></i>';
+            }
+
+            function cleanInline(text) {
+                // Bold **text** → <strong>
+                text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                // Italic *text* → <em>
+                text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                // Backtick code → <code>
+                text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+                return text;
+            }
+
+            while (i < lines.length) {
+                const line = lines[i].trimEnd();
+
+                // ── H2 heading (## ...) → section banner ──
+                if (/^##\s+/.test(line)) {
+                    let title = line.replace(/^##\s+/, '').replace(/[*_`]/g, '').trim();
+                    // Strip leading duplicate emojis from the textbook heading text
+                    title = title.replace(/^[🔍📚✏️✅💡📖📋\s]+/g, '').trim();
+                    const stype = detectSectionType(title);
+                    inSection = stype;
+                    const icon = getSectionIcon(title);
+
+                    if (hasOpenSection) {
+                        html += `</div></div>`; // Close previous content wrapper and container
+                    }
+
+                    const collapsedClass = '';
+
+                    html += `<div class="tb-section-container">
+                        <div class="tb-section-banner" onclick="const content = this.nextElementSibling; content.classList.toggle('collapsed');">
+                            <span class="tb-section-icon">${icon}</span>
+                            <span class="tb-section-title">${title}</span>
+                        </div>
+                        <div class="tb-section-content ${collapsedClass}">`;
+                    hasOpenSection = true;
+                    i++; continue;
+                }
+
+                // ── H3 heading (### ...) → sub heading ──
+                if (/^###\s+/.test(line)) {
+                    const title = line.replace(/^###\s+/, '').replace(/[*_`]/g, '').trim();
+                    html += `<div style="font-weight:700;color:#1a3a1a;font-family:'Times New Roman',serif;font-size:17px;margin:14px 0 4px;">${cleanInline(title)}</div>`;
+                    i++; continue;
+                }
+
+                // ── Bold "Step N: Title" lines (standalone bold line = step title) ──
+                const stepMatch = line.match(/^\*\*Step\s+(\d+)[:\.\)]\s*(.+?)\*\*\s*$/i);
+                if (stepMatch) {
+                    // Collect body lines until next bold step / heading / empty then bold
+                    const stepNum = stepMatch[1];
+                    const stepTitle = stepMatch[2];
+                    let bodyLines = [];
+                    i++;
+                    while (i < lines.length) {
+                        const nxt = lines[i].trimEnd();
+                        // Stop at next step or heading
+                        if (/^\*\*Step\s+\d+/i.test(nxt) || /^##/.test(nxt) || /^###/.test(nxt)) break;
+                        bodyLines.push(nxt);
+                        i++;
+                    }
+                    const bodyHTML = processBodyLines(bodyLines, cleanInline);
+                    html += `<div class="tb-step">
+                        <div class="tb-step-title">Step ${stepNum}: ${cleanInline(stepTitle)}</div>
+                        <div class="tb-step-body">${bodyHTML}</div>
+                    </div>`;
+                    continue;
+                }
+
+                // ── Empty line: paragraph break ──
+                if (line.trim() === '') { html += ''; i++; continue; }
+
+                // ── Final answer section special wrapper ──
+                if (inSection === 'final' && line.trim()) {
+                    // Collect all final answer lines
+                    let faLines = [];
+                    while (i < lines.length && lines[i].trim() && !/^##/.test(lines[i])) {
+                        faLines.push(lines[i].trimEnd());
+                        i++;
+                    }
+                    const faHTML = processBodyLines(faLines, cleanInline);
+                    html += `<div class="tb-final-box">${faHTML}</div>`;
+                    inSection = null;
+                    continue;
+                }
+
+                // ── Key Insight special wrapper ──
+                if (inSection === 'insight' && line.trim()) {
+                    let insLines = [];
+                    while (i < lines.length && lines[i].trim() && !/^##/.test(lines[i])) {
+                        insLines.push(lines[i].trimEnd());
+                        i++;
+                    }
+                    const insHTML = processBodyLines(insLines, cleanInline);
+                    html += `<div class="tb-insight-box">${insHTML}</div>`;
+                    inSection = null;
+                    continue;
+                }
+
+                // ── Regular paragraph ──
+                let paraLines = [];
+                while (i < lines.length) {
+                    const nxt = lines[i].trimEnd();
+                    if (nxt === '' || /^##/.test(nxt) || /^###/.test(nxt) || /^\*\*Step\s+\d+/i.test(nxt)) break;
+                    paraLines.push(nxt);
+                    i++;
+                }
+                if (paraLines.length > 0) {
+                    const paraHTML = processBodyLines(paraLines, cleanInline);
+                    html += `<div class="tb-section-body">${paraHTML}</div>`;
+                }
+            }
+
+            if (hasOpenSection) {
+                html += `</div></div>`;
+            }
+
+            return html;
+        }
+
+        function processBodyLines(lines, cleanInline) {
+            let html = '';
+            let listItems = [];
+            let inList = false;
+            let tableRows = [];
+
+            function flushList() {
+                if (listItems.length > 0) {
+                    html += '<ul style="padding-left:22px;margin:6px 0 10px;">' +
+                        listItems.map(li => `<li style="margin-bottom:5px;">${li}</li>`).join('') +
+                        '</ul>';
+                    listItems = [];
+                }
+            }
+
+            function flushTable() {
+                if (tableRows.length > 0) {
+                    let tableHTML = '<div class="observation-table-container"><table class="user-data-table">';
+
+                    const parseRow = (rowText) => {
+                        let cells = rowText.split('|').map(c => c.trim());
+                        if (cells[0] === '') cells.shift();
+                        if (cells[cells.length - 1] === '') cells.pop();
+                        return cells;
+                    };
+
+                    let headerCells = parseRow(tableRows[0]);
+                    let hasSeparator = false;
+                    if (tableRows.length > 1) {
+                        let secondRow = tableRows[1].trim();
+                        if (/^[|:\-\s]+$/.test(secondRow) && secondRow.includes('-')) {
+                            hasSeparator = true;
+                        }
+                    }
+
+                    for (let r = 0; r < tableRows.length; r++) {
+                        if (r === 1 && hasSeparator) continue;
+                        let isHeader = (r === 0);
+                        let cells = parseRow(tableRows[r]);
+                        tableHTML += '<tr>';
+                        for (let c = 0; c < headerCells.length; c++) {
+                            let cellVal = cells[c] !== undefined ? cells[c] : '';
+                            tableHTML += isHeader ? `<th>${cleanInline(cellVal)}</th>` : `<td>${cleanInline(cellVal)}</td>`;
+                        }
+                        tableHTML += '</tr>';
+                    }
+                    tableHTML += '</table></div>';
+                    html += tableHTML;
+                    tableRows = [];
+                }
+            }
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed === '') {
+                    flushList();
+                    flushTable();
+                    continue;
+                }
+
+                // Table row check
+                const isTableRow = trimmed.startsWith('|') && trimmed.endsWith('|') && trimmed.length > 1;
+
+                if (isTableRow) {
+                    flushList();
+                    tableRows.push(line);
+                    continue;
+                }
+
+                // List item
+                if (/^[-*]\s+/.test(trimmed)) {
+                    flushTable();
+                    inList = true;
+                    listItems.push(cleanInline(trimmed.replace(/^[-*]\s+/, '')));
+                    continue;
+                }
+
+                // Numbered list
+                if (/^\d+\.\s+/.test(trimmed)) {
+                    flushTable();
+                    if (!inList) { flushList(); }
+                    inList = true;
+                    listItems.push(cleanInline(trimmed.replace(/^\d+\.\s+/, '')));
+                    continue;
+                }
+
+                flushList();
+                flushTable();
+                inList = false;
+                const cleaned = cleanInline(trimmed);
+                if (cleaned) html += `<p>${cleaned}</p>`;
+            }
+            flushList();
+            flushTable();
+            return html;
+        }
+
+        fetchTopics();
+    </script>
+</body>
+
+</html>

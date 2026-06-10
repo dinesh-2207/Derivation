@@ -1,0 +1,16 @@
+Flask
+pymongo
+sympy
+python-dotenv
+gunicorn
+flask-cors
+blinker
+click
+itsdangerous
+jinja2
+markupsafe
+werkzeug
+dnspython
+mpmath
+packaging
+groq
